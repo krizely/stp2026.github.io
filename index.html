@@ -216,6 +216,14 @@ footer b{color:#e9edee}
 .band{border-radius:5px;overflow:hidden;height:26px}
 </style>
 </head>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+  }
+</script>
 <body>
 
 <div class="topbar">
