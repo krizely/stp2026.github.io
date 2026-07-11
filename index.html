@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sea To Peak 2026 — Feuille de route</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#e9edee;      /* granite pâle / neige */
+  --card:#ffffff;
+  --ink:#132630;        /* granite atlantique */
+  --ink-2:#3a5560;
+  --muted:#66808a;
+  --line:#d3dade;
+  --sea:#1c7d92;        /* atlantique */
+  --peak:#b4632f;       /* roche alpine */
+  --ok:#3f8a5a;
+  --warn:#c98a1c;
+  --danger:#c23c26;
+  /* terrain */
+  --t-plat:#c3d7cd;
+  --t-roul:#5cb185;
+  --t-val:#3f9aa2;
+  --t-mont:#d98a3a;
+  --t-tech:#c2452c;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Inter",system-ui,sans-serif;line-height:1.5;
+  font-size:16px;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+h1,h2,h3,.disp{font-family:"Archivo",sans-serif}
+.mono{font-family:"IBM Plex Mono",monospace}
+a{color:var(--sea)}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:30;background:rgba(19,38,48,.96);color:#e9edee;backdrop-filter:blur(6px)}
+.topbar .wrap{display:flex;align-items:center;gap:16px;height:52px}
+.topbar .brand{font-family:"Archivo";font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.8rem}
+.topbar nav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.topbar nav a{color:#aebfc6;text-decoration:none;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;padding:6px 9px;border-radius:6px}
+.topbar nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.btn-print{font-family:"IBM Plex Mono";font-size:.72rem;color:var(--ink);background:#e9edee;border:none;padding:7px 12px;border-radius:6px;cursor:pointer;letter-spacing:.04em}
+
+/* ---------- hero ---------- */
+.hero{position:relative;background:var(--ink);color:#eef2f3;overflow:hidden}
+.hero svg.contours{position:absolute;inset:0;width:100%;height:100%;opacity:.16}
+.hero .wrap{position:relative;padding:52px 20px 40px}
+.eyebrow{font-family:"IBM Plex Mono";font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:#7fb6c2}
+.hero h1{font-weight:900;font-size:clamp(2.4rem,7vw,4.6rem);line-height:.94;margin:.32em 0 .1em;letter-spacing:-.01em}
+.hero h1 .to{background:linear-gradient(90deg,var(--sea),var(--peak));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{color:#b9c9cf;max-width:56ch;font-size:1.02rem}
+.hero .route{font-family:"IBM Plex Mono";font-size:.82rem;color:#8fb1bb;margin-top:14px;letter-spacing:.02em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:rgba(255,255,255,.1);margin-top:30px;border-radius:10px;overflow:hidden}
+.stat{background:var(--ink);padding:14px 16px}
+.stat .n{font-family:"Archivo";font-weight:800;font-size:1.5rem;line-height:1}
+.stat .n small{font-size:.8rem;font-weight:600;color:#9fbcc4}
+.stat .l{font-family:"IBM Plex Mono";font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#7fa0aa;margin-top:6px}
+
+/* ---------- sections ---------- */
+section{padding:44px 0;scroll-margin-top:60px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.sec-head .idx{font-family:"IBM Plex Mono";font-size:.8rem;color:var(--sea);font-weight:600}
+.sec-head h2{font-size:clamp(1.4rem,3.6vw,2rem);font-weight:800;margin:0;letter-spacing:-.01em}
+.sec-head .note{margin-left:auto;font-size:.8rem;color:var(--muted);max-width:34ch;text-align:right}
+
+/* ---------- plan toggle ---------- */
+.toggle{display:inline-flex;background:#dbe2e4;border-radius:9px;padding:3px;margin-bottom:20px;font-family:"IBM Plex Mono";font-size:.8rem}
+.toggle button{border:none;background:none;padding:8px 16px;border-radius:7px;cursor:pointer;color:var(--ink-2);letter-spacing:.03em}
+.toggle button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12);font-weight:600}
+.plan-meta{font-size:.86rem;color:var(--ink-2);margin-bottom:18px}
+.plan-meta b{color:var(--ink)}
+
+/* day rail */
+.rail{position:relative}
+.day{display:grid;grid-template-columns:64px 1fr;gap:16px;padding:0 0 14px}
+.day .tick{position:relative;text-align:right;padding-right:16px}
+.day .tick::after{content:"";position:absolute;right:-1px;top:6px;bottom:-14px;width:2px;background:var(--line)}
+.day:last-child .tick::after{display:none}
+.day .dnum{font-family:"Archivo";font-weight:800;font-size:1.15rem;line-height:1}
+.day .ddate{font-family:"IBM Plex Mono";font-size:.66rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+.day .body{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 15px;position:relative}
+.day .dot{position:absolute;left:-24px;top:15px;width:12px;height:12px;border-radius:50%;border:2px solid var(--paper)}
+.day .drow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.day .dtr{font-family:"Archivo";font-weight:800;font-size:.95rem;letter-spacing:.02em}
+.day .dloc{font-weight:600}
+.day .dnums{margin-left:auto;font-family:"IBM Plex Mono";font-size:.8rem;color:var(--ink-2);white-space:nowrap}
+.day .dnums .kk{color:var(--sea);font-weight:600}
+.day .dnums .dd{color:var(--peak);font-weight:600}
+.day .dnote{font-size:.85rem;color:var(--muted);margin-top:5px}
+.chip{display:inline-block;font-family:"IBM Plex Mono";font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:20px;font-weight:600}
+.chip.cp{background:#12303a;color:#8fd0e0}
+.chip.warn{background:#fbf1dc;color:#8a5f10}
+
+/* ---------- master table ---------- */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table.master{border-collapse:collapse;width:100%;font-size:.84rem;min-width:760px}
+table.master th{background:var(--ink);color:#dbe6ea;font-family:"IBM Plex Mono";font-weight:500;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:10px 10px;text-align:left}
+table.master td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:middle}
+table.master tr:hover td{background:#f4f7f7}
+table.master .id{font-family:"Archivo";font-weight:800;font-size:1rem}
+table.master .num{font-family:"IBM Plex Mono";text-align:right;white-space:nowrap}
+table.master .cum{color:var(--muted)}
+.diffbar{display:inline-flex;gap:2px}
+.diffbar i{width:6px;height:13px;border-radius:1px;background:#d5dcde;display:block}
+.diffbar i.on{background:var(--peak)}
+.flag{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px;vertical-align:middle}
+.flag.ok{background:var(--ok)}.flag.warn{background:var(--warn)}.flag.crit{background:var(--danger)}
+
+/* ---------- logistics cards ---------- */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.lcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.lcard h3{margin:0 0 4px;font-size:1.05rem;font-weight:800}
+.lcard .k{font-family:"IBM Plex Mono";font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sea);margin-bottom:12px}
+.lcard ul{margin:0;padding-left:0;list-style:none}
+.lcard li{padding:7px 0;border-top:1px dashed var(--line);font-size:.88rem}
+.lcard li:first-child{border-top:none}
+.lcard li b{font-weight:700}
+.cpline{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.cpline .km{font-family:"IBM Plex Mono";font-size:.72rem;color:var(--muted)}
+.hours{font-size:.8rem;color:var(--ink-2);margin-top:2px}
+.hit{font-family:"IBM Plex Mono";font-size:.7rem;margin-top:4px}
+.hit.good{color:var(--ok)}.hit.tight{color:var(--warn)}
+.danger-strip{background:#fbece8;border:1px solid #eecabf;border-left:4px solid var(--danger);border-radius:8px;padding:12px 15px;font-size:.86rem}
+.danger-strip b{color:var(--danger)}
+
+/* ---------- fiches ---------- */
+.fiche{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:22px;overflow:hidden;box-shadow:0 1px 2px rgba(19,38,48,.05)}
+.fiche .fhead{display:flex;align-items:stretch;gap:0;border-bottom:1px solid var(--line)}
+.fiche .tile{flex:0 0 84px;background:var(--ink);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 0}
+.fiche .tile .lt{font-family:"Archivo";font-weight:900;font-size:2.6rem;line-height:.8}
+.fiche .tile .lb{font-family:"IBM Plex Mono";font-size:.58rem;letter-spacing:.1em;color:#8fb1bb;margin-top:6px}
+.fiche .fmeta{flex:1;padding:14px 18px;min-width:0}
+.fiche .region{font-family:"IBM Plex Mono";font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--sea)}
+.fiche .fname{font-family:"Archivo";font-weight:800;font-size:1.25rem;line-height:1.1;margin:3px 0 0;letter-spacing:-.01em}
+.fiche .fnums{display:flex;gap:18px;margin-top:8px;flex-wrap:wrap;align-items:baseline}
+.fiche .fnums .big{font-family:"Archivo";font-weight:800;font-size:1.15rem}
+.fiche .fnums .u{font-family:"IBM Plex Mono";font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block}
+.fiche .fnums .dpx{color:var(--peak)}
+.fiche .fnums .kmx{color:var(--sea)}
+.fiche .fdays{flex:0 0 auto;padding:14px 16px;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:6px;justify-content:center;background:#f6f8f8}
+.fiche .fdays .dtag{font-family:"IBM Plex Mono";font-size:.66rem;white-space:nowrap;color:var(--ink-2)}
+.fiche .fdays .dtag b{color:var(--ink);font-weight:600}
+
+/* terrain band */
+.band{display:flex;height:30px;margin:0}
+.band .seg{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.band .seg span{font-family:"IBM Plex Mono";font-size:.58rem;color:rgba(0,0,0,.62);white-space:nowrap;padding:0 4px;font-weight:500}
+.seg.plat{background:var(--t-plat)}.seg.roul{background:var(--t-roul)}.seg.val{background:var(--t-val)}
+.seg.mont{background:var(--t-mont)}.seg.tech{background:var(--t-tech)}
+.seg.tech span,.seg.mont span{color:rgba(255,255,255,.92)}
+.bandkey{display:flex;gap:12px;flex-wrap:wrap;font-family:"IBM Plex Mono";font-size:.62rem;color:var(--muted);padding:6px 18px 0}
+.bandkey i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+
+.fbody{padding:14px 18px 18px}
+.fintro{font-size:.9rem;color:var(--ink-2);margin:0 0 12px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fblock h4{font-family:"IBM Plex Mono";font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sea);margin:0 0 6px;font-weight:600}
+.fblock ul{margin:0;padding-left:16px;font-size:.85rem}
+.fblock ul li{margin-bottom:3px}
+.fblock.full{grid-column:1/-1}
+.rline{font-size:.85rem;margin:2px 0}
+.rline .flag{margin-right:6px}
+.vig{background:#fbece8;border-left:3px solid var(--danger);border-radius:6px;padding:8px 12px;font-size:.83rem}
+.vig ul{padding-left:16px;margin:4px 0 0}
+.vig h4{color:var(--danger)}
+.cpbadge{display:inline-block;background:#12303a;color:#8fd0e0;font-family:"IBM Plex Mono";font-size:.66rem;padding:3px 9px;border-radius:20px;letter-spacing:.05em;margin-top:2px}
+
+footer{background:var(--ink);color:#9fbcc4;font-size:.78rem;padding:30px 0}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer b{color:#e9edee}
+
+@media(max-width:640px){
+  .fgrid{grid-template-columns:1fr}
+  .fiche .fhead{flex-wrap:wrap}
+  .fiche .fdays{border-left:none;border-top:1px solid var(--line);flex-direction:row;width:100%;background:#f6f8f8}
+  .sec-head .note{display:none}
+  .day{grid-template-columns:52px 1fr}
+}
+
+/* ---------- print : une fiche par page ---------- */
+@media print{
+  :root{--paper:#fff}
+  body{font-size:11.5px;background:#fff}
+  .topbar,.btn-print,.toggle,.bandkey{display:none!important}
+  .wrap{max-width:none;padding:0 8mm}
+  section{padding:8mm 0;page-break-inside:auto}
+  .hero{color:#000;background:#fff;border-bottom:2px solid #000}
+  .hero svg.contours{display:none}
+  .hero h1 .to{color:#000;-webkit-text-fill-color:#000}
+  .hero .sub,.hero .route,.eyebrow{color:#333}
+  .stat{background:#fff;color:#000;border:1px solid #ccc}
+  .stat .n small,.stat .l{color:#333}
+  .fiche{page-break-inside:avoid;break-inside:avoid;box-shadow:none;border:1.5px solid #000;margin-bottom:6mm}
+  .fiche .tile{background:#111!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .band .seg,.diffbar i.on,.flag,.chip,.cpbadge,.cpline,.stat{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #fiches .fiche{page-break-after:always}
+  table.master th{position:static}
+  a{color:#000;text-decoration:none}
+}
+
+/* profil d'altitude réel */
+.spark{padding:10px 18px 6px;border-bottom:1px solid var(--line);background:linear-gradient(#ffffff,#f6f9f9)}
+.sparksvg{display:block;width:100%;height:92px}
+.spark .cap{display:flex;justify-content:space-between;gap:8px;font-family:"IBM Plex Mono";font-size:.6rem;color:var(--muted);margin-top:2px}
+.spark .cap .hi{color:var(--peak);font-weight:600}
+@media print{.spark{background:#fff}}
+.terrain{padding:8px 18px 12px;border-bottom:1px solid var(--line)}
+.tcap{font-family:"IBM Plex Mono";font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.band{border-radius:5px;overflow:hidden;height:26px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand">STP&nbsp;2026 · Roadbook</span>
+    <nav>
+      <a href="#plan">Plan</a>
+      <a href="#feuille">Feuille de route</a>
+      <a href="#logistique">Logistique</a>
+      <a href="#fiches">Fiches</a>
+    </nav>
+    <button class="btn-print" onclick="window.print()">Imprimer / PDF</button>
+  </div>
+</div>
+
+<header class="hero">
+  <svg class="contours" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#7fb6c2" stroke-width="1">
+      <path d="M-50 380 C 200 340 300 420 520 360 S 900 300 1250 350"/>
+      <path d="M-50 410 C 220 370 320 450 540 390 S 920 330 1250 380"/>
+      <path d="M-50 440 C 240 400 340 480 560 420 S 940 360 1250 410"/>
+      <path d="M-50 320 C 260 280 380 360 600 300 S 980 250 1250 300"/>
+      <path d="M-50 260 C 300 230 440 300 680 250 S 1020 200 1250 250"/>
+      <path d="M-50 200 C 340 180 500 240 720 200 S 1060 160 1250 200"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <div class="eyebrow">Bikepacking tout-terrain · sans assistance · 18 juil → 2 août 2026</div>
+    <h1>De la mer<br><span class="to">au sommet.</span></h1>
+    <p class="sub">Feuille de route logistique et fiches de gestion de course pour boucler la Sea&nbsp;To&nbsp;Peak 2298&nbsp;km en 13&nbsp;jours (objectif), 15&nbsp;jours en sécurité.</p>
+    <div class="route">Pointe de Corsen (Plouarzel) ▸ Bretagne ▸ Loire ▸ Limousin ▸ Auvergne ▸ Aubrac ▸ Cévennes ▸ Ventoux ▸ Alpes ▸ Saint-Véran</div>
+    <div class="stats">
+      <div class="stat"><div class="n">2298<small> km</small></div><div class="l">Distance totale</div></div>
+      <div class="stat"><div class="n">~33 200<small> m</small></div><div class="l">D+ cumulé (lissé GPX)</div></div>
+      <div class="stat"><div class="n">15<small> +Z</small></div><div class="l">Traces GPX</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">Checkpoints</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">Massifs · 3 000 m au final</div></div>
+      <div class="stat"><div class="n">11j06<small></small></div><div class="l">Record 2024 (S. Bougouin)</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ PLAN ============ -->
+  <section id="plan">
+    <div class="sec-head">
+      <span class="idx">01</span>
+      <h2>Plan d'allure</h2>
+      <span class="note">Basé sur un découpage aux limites de traces. Les coupures en milieu de trace (K, L, M) sont approximatives — à affiner sur ton GPS.</span>
+    </div>
+
+    <div class="toggle" role="tablist">
+      <button id="t13" class="on" onclick="setPlan(13)">Objectif · 13 jours</button>
+      <button id="t15" onclick="setPlan(15)">Sécurité · 15 jours</button>
+    </div>
+    <div class="plan-meta" id="planMeta"></div>
+    <div class="rail" id="rail"></div>
+  </section>
+
+  <!-- ============ FEUILLE DE ROUTE ============ -->
+  <section id="feuille">
+    <div class="sec-head">
+      <span class="idx">02</span>
+      <h2>Feuille de route synthétique</h2>
+      <span class="note">Kilométrage Openrunner (retenu par l'orga). D+ indicatif — varie fortement selon le logiciel.</span>
+    </div>
+    <div class="tablewrap">
+      <table class="master">
+        <thead>
+          <tr>
+            <th>Trace</th><th>Section</th><th class="num">km</th><th class="num">Cumul</th>
+            <th class="num">D+</th><th>Difficulté</th><th>Ravito</th><th>Eau</th><th>Jour 13/16</th>
+          </tr>
+        </thead>
+        <tbody id="masterBody"></tbody>
+      </table>
+    </div>
+    <p style="font-size:.78rem;color:var(--muted);margin-top:10px">
+      <span class="flag ok"></span>correct &nbsp; <span class="flag warn"></span>prévoir réserve &nbsp; <span class="flag crit"></span>zone blanche / autonomie
+      &nbsp;·&nbsp; D+ = calcul lissé sur ton GPX (seuil 3 m, anti-bruit). Fourchette officielle IBP/Openrunner/Strava dans chaque fiche.
+    </p>
+  </section>
+
+  <!-- ============ LOGISTIQUE ============ -->
+  <section id="logistique">
+    <div class="sec-head">
+      <span class="idx">03</span>
+      <h2>Logistique critique</h2>
+      <span class="note">Ce qui te fait gagner (ou perdre) l'épreuve en dehors du pédalage.</span>
+    </div>
+
+    <div class="grid2" style="margin-bottom:18px">
+      <div class="lcard">
+        <div class="k">Checkpoints — validés par le tracker</div>
+        <h3 style="margin-bottom:12px">Horaires d'accueil</h3>
+        <ul>
+          <li>
+            <div class="cpline"><b>CP1 · Monkey Bike Bar — Blain</b><span class="km">km 491 · fin B</span></div>
+            <div class="hours">Ouverture exceptionnelle lundi 20/07, ~9h→minuit. Galettes-saucisses + atelier répa.</div>
+            <div class="hit good" data-cp="1"></div>
+          </li>
+          <li>
+            <div class="cpline"><b>CP2 · La Cyclerie Café — Poitiers</b><span class="km">km 889 · fin E</span></div>
+            <div class="hours">Horaires élargis, patron « Phiphoo » ouvre tard.</div>
+            <div class="hit good" data-cp="2"></div>
+          </li>
+          <li>
+            <div class="cpline"><b>CP3 · Bar Chez Audrey — Ste-Geneviève</b><span class="km">km 1458 · fin J</span></div>
+            <div class="hours">Continu 7h→21h30 les ven 24 / sam 25 / dim 26. Lundi 27 : 7h→13h30. Sinon 7h-13h / 16h-20h (mar–sam).</div>
+            <div class="hit" data-cp="3"></div>
+          </li>
+          <li>
+            <div class="cpline"><b>CP4 · Pista Cycling Café — Bédoin</b><span class="km">km 1893 · fin L</span></div>
+            <div class="hours">Fermé lun + mar. Mer→dim 9h-18h. Bivouac interdit dans le jardin hors ouverture.</div>
+            <div class="hit" data-cp="4"></div>
+          </li>
+          <li style="border-top:1px dashed var(--line)">
+            <b>CP officieux · Laguiole (trace K)</b> — touche les attributs du taureau de bronze, place du Foirail. Photo la plus originale récompensée.
+          </li>
+        </ul>
+      </div>
+
+      <div class="lcard">
+        <div class="k">Ravitaillement — zones à anticiper</div>
+        <h3 style="margin-bottom:12px">Où faire le plein</h3>
+        <ul>
+          <li><span class="flag crit"></span><b>Trace G</b> — Haut-Limousin sauvage, très peu de points. Charge avant Le Dorat.</li>
+          <li><span class="flag crit"></span><b>Trace H</b> — ravito uniquement Royère (départ) et La Courtine (milieu).</li>
+          <li><span class="flag warn"></span><b>Trace I</b> — Cézallier isolé, peu d'options.</li>
+          <li><span class="flag crit"></span><b>Trace K</b> — Aubrac / Margeride / Cévennes très espacés. Fais le plein à Laguiole.</li>
+          <li><span class="flag crit"></span><b>Trace M</b> — zone blanche après Buis-les-Baronnies. <b>Détour supermarché Rémuzat / Verclause (km 104)</b>.</li>
+          <li><span class="flag crit"></span><b>Trace N</b> — autonomie quasi-totale. <b>Plein obligatoire à Veynes.</b> Plan B : La Roche-des-Arnauds (km 66).</li>
+          <li style="border-top:1px dashed var(--line)"><span class="flag warn"></span><b>Eau</b> — sécheresse : fontaines & robinets de cimetière possiblement coupés. Ne pars jamais à sec « au cas où ».</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-bottom:18px">
+      <div class="lcard">
+        <div class="k">Points de vigilance — sécurité & technique</div>
+        <h3 style="margin-bottom:12px">Où lever le pied</h3>
+        <ul>
+          <li><b>Bac de Loire (trace C)</b> — <b>obligatoire</b>, sinon disqualification. Rotation /20 min, 5h30→22h20 (sem.), 6h30→21h30 (WE/férié). Cale ton horaire !</li>
+          <li><b>Plomb du Cantal (trace J)</b> — sentier aérien au sommet (1800 m) puis descente cassante vers les gorges de la Truyère. <b>À éviter de nuit.</b></li>
+          <li><b>Descente des Vans (trace L)</b> — technique, vélo chargé + fatigue. Prudence.</li>
+          <li><b>La Courtine (trace H)</b> — nationale à forte circulation (contournement camp militaire).</li>
+          <li><b>Après Guillestre (trace O)</b> — 6 km de route du Guil / Izoard, trafic dense.</li>
+          <li><b>Patous & troupeaux</b> — surtout en montagne finale. Ralentis, referme les barrières.</li>
+        </ul>
+      </div>
+
+      <div class="lcard">
+        <div class="k">Tracker MadCap & règles</div>
+        <h3 style="margin-bottom:12px">Ne pas se faire piéger</h3>
+        <ul>
+          <li><b>Recharge le tracker toutes les 48 h max</b> (signal /2 min). Câble fourni uniquement. QR vers le ciel.</li>
+          <li>Allumage <b>le matin du départ, sur la ligne</b> (pas avant). Restitution en main propre à l'arrivée.</li>
+          <li>Caution : 150 € tracker + 20 € pochette (empreinte CB). Inscris-toi avec l'e-mail d'inscription.</li>
+          <li><b>Poti'chat</b> = voiture-balai virtuelle, arrive le <b>dim 2 août 20h</b>. Derrière lui = hors délais (mais tu peux finir).</li>
+          <li>Bivouac interdit dans le Parc des volcans d'Auvergne (25 premiers km de la trace I).</li>
+          <li>Abandon : SMS immédiat à l'orga (nom + n° balise), puis renvoi tracker à MadCap.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="danger-strip">
+      <b>⚠ Risque incendie Vaucluse — trace L uniquement.</b> Chaque jour après <b>18h</b>, la préfecture publie l'accès aux massifs (Bollène-Uchaux &amp; Dentelles de Montmirail) → relayé sur <b>Sportity</b>.
+      Massif <b>ROUGE</b> = délestage <b>obligatoire</b> (L-1 depuis Mornas, 8 km · L-2 depuis Gigondas, 35 km). Rouler dans un massif interdit = <b>disqualification + amende jusqu'à 750 €</b>. Prendre le délestage alors que c'est ouvert = disqualification aussi. Charge les deux traces de délestage avant le départ. <em>(En 2025, Bollène-Uchaux est resté fermé toute l'épreuve.)</em>
+    </div>
+  </section>
+
+  <!-- ============ FICHES ============ -->
+  <section id="fiches">
+    <div class="sec-head">
+      <span class="idx">04</span>
+      <h2>Fiches par trace</h2>
+      <span class="note">Une fiche par page à l'impression. Profil d'altitude réel issu du GPX (lissé) — ton GPS affichera souvent un D+ plus élevé.</span>
+    </div>
+    <div class="bandkey"><span>Profil d'altitude réel (GPX) + type de terrain :</span><span><i style="background:var(--t-plat)"></i>plat</span><span><i style="background:var(--t-roul)"></i>roulant</span><span><i style="background:var(--t-val)"></i>vallonné</span><span><i style="background:var(--t-mont)"></i>montagne</span><span><i style="background:var(--t-tech)"></i>technique / cassant</span><span>▲ = point culminant</span></div>
+    <div id="fichesBody"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b>Sea To Peak 2026</b> — roadbook personnel · données Openrunner / IBP / Strava (indicatives)</div>
+    <div>Vérifie toujours <b>Sportity</b> pour les mises à jour de dernière minute · <b>ce n'est que du vélo</b> 🚵</div>
+  </div>
+</footer>
+
+<script>
+const traces = [{"id": "A", "frm": "Pointe de Corsen (Plouarzel)", "to": "Ploemeur", "region": "Finistère · Morbihan", "km": 227.8, "cum": 227.8, "dp": 2221, "emin": 1, "emax": 376, "rng": "2494 → 3314", "diff": 3, "intro": "Grand départ à la Pointe de Corsen, point le plus à l'ouest de l'Hexagone. Attaque immédiate des Monts d'Arrée et des Montagnes Noires (~370 m, modestes mais redoutables). Section historique de la STP.", "jal": ["Départ Pointe de Corsen (km 0)", "Monts d'Arrée", "Montagnes Noires", "Dernier bord de mer — Ploemeur (km 228)"], "rav": "Villages réguliers, aucune difficulté.", "eau": "RAS.", "vig": ["La Bretagne n'est PAS plate : relief joueur dès le km 0."], "cp": null, "prof": [[0.0, 24], [1.33, 37], [2.95, 49], [5.3, 71], [6.94, 89], [8.44, 123], [10.09, 130], [12.35, 84], [15.02, 70], [16.32, 58], [18.68, 84], [20.17, 55], [21.28, 37], [24.04, 79], [24.85, 86], [25.73, 89], [27.61, 85], [30.12, 75], [31.65, 80], [32.82, 76], [34.16, 92], [36.17, 89], [38.61, 86], [39.77, 92], [41.68, 88], [43.19, 93], [46.37, 103], [47.68, 100], [48.98, 92], [50.31, 102], [51.55, 100], [53.17, 92], [54.21, 55], [55.23, 96], [57.03, 82], [58.86, 24], [59.77, 7], [61.05, 72], [63.07, 118], [64.86, 156], [68.28, 92], [70.74, 97], [73.54, 107], [75.16, 100], [76.96, 103], [79.47, 129], [80.31, 128], [81.29, 146], [83.28, 174], [85.36, 184], [86.68, 191], [88.11, 264], [89.16, 321], [90.02, 326], [91.19, 316], [92.13, 296], [93.27, 356], [94.37, 354], [95.6, 301], [97.66, 292], [99.52, 269], [103.46, 267], [105.51, 261], [106.5, 264], [108.6, 177], [110.94, 182], [113.07, 164], [116.0, 152], [118.88, 129], [120.06, 124], [121.47, 127], [122.91, 129], [125.59, 85], [126.85, 64], [128.37, 111], [130.46, 103], [132.2, 127], [134.01, 162], [135.5, 201], [137.12, 301], [138.41, 222], [139.85, 162], [141.58, 137], [142.79, 139], [144.06, 180], [145.84, 183], [147.44, 172], [148.35, 128], [150.1, 166], [151.6, 129], [153.15, 125], [154.53, 192], [157.02, 193], [158.54, 172], [160.06, 141], [162.11, 143], [163.49, 169], [164.44, 168], [165.52, 174], [166.92, 119], [168.18, 133], [170.33, 109], [171.86, 67], [173.22, 74], [174.83, 65], [176.11, 99], [178.0, 108], [179.58, 118], [180.9, 85], [181.88, 58], [183.12, 61], [184.44, 76], [186.13, 92], [187.58, 28], [188.53, 57], [189.74, 86], [190.88, 46], [192.17, 79], [193.76, 63], [195.08, 82], [196.14, 84], [197.6, 38], [198.46, 25], [199.33, 24], [200.82, 8], [201.9, 8], [203.26, 36], [204.6, 53], [205.89, 30], [206.79, 26], [208.74, 26], [210.06, 56], [211.78, 37], [213.59, 29], [215.01, 29], [216.52, 48], [217.4, 39], [218.48, 18], [219.11, 20], [220.1, 13], [221.54, 6], [223.13, 13], [224.68, 5], [225.63, 14], [226.72, 1], [227.77, 5]], "rf": "ok", "ef": "ok"}, {"id": "B", "frm": "Ploemeur", "to": "Blain", "region": "Morbihan · Loire-Atlantique", "km": 258.1, "cum": 485.9, "dp": 1503, "emin": 1, "emax": 165, "rng": "2308 → 2494", "diff": 3, "intro": "Traversée du Morbihan au cœur des forêts et des landes. Après Redon, le dénivelé se calme, mais le terrain garde des relances autour de Guémené-Penfao.", "jal": ["Forêts & landes du Morbihan", "Redon (~mi-parcours, gros ravito)", "Guémené-Penfao", "CP1 Blain (km 258)"], "rav": "Correct. Redon = grosse ressource à mi-parcours.", "eau": "RAS.", "vig": ["Chapelle des Lieux-Saints (après Guémené) : spectacle le sam 18 à 22h — sans objet vu l'avance."], "cp": "CP1 · Monkey Bike Bar / Cycles Riflet — km 491", "prof": [[0.0, 8], [1.43, 16], [2.58, 13], [4.04, 22], [5.69, 14], [6.98, 18], [9.17, 39], [11.01, 41], [12.5, 38], [14.21, 50], [15.3, 67], [16.03, 55], [17.41, 52], [19.77, 49], [20.53, 34], [21.6, 26], [22.55, 30], [23.71, 16], [24.26, 21], [25.02, 23], [25.97, 21], [27.76, 43], [28.77, 12], [29.48, 8], [30.77, 43], [31.58, 15], [32.91, 42], [34.67, 46], [35.68, 36], [37.23, 43], [38.49, 52], [40.08, 55], [41.67, 60], [44.32, 81], [46.73, 150], [49.44, 139], [51.12, 85], [53.4, 103], [55.0, 84], [56.99, 38], [58.93, 36], [60.3, 20], [64.6, 28], [67.14, 23], [69.54, 34], [71.04, 49], [72.78, 70], [74.81, 48], [77.11, 57], [80.0, 89], [81.0, 77], [83.03, 114], [84.69, 116], [86.33, 89], [87.7, 129], [90.76, 141], [95.42, 158], [100.85, 133], [102.57, 109], [103.92, 97], [105.21, 88], [106.94, 75], [108.84, 66], [112.27, 120], [113.12, 137], [113.81, 145], [114.99, 124], [116.29, 104], [118.64, 69], [120.77, 115], [126.25, 117], [127.98, 111], [129.9, 94], [131.41, 81], [133.09, 99], [134.47, 98], [136.9, 113], [139.12, 98], [140.52, 95], [141.55, 86], [143.89, 105], [147.04, 100], [151.63, 90], [152.44, 94], [152.84, 88], [153.92, 75], [155.43, 76], [159.75, 34], [160.89, 30], [162.65, 80], [164.68, 76], [166.25, 80], [168.36, 57], [170.5, 53], [171.59, 41], [173.13, 79], [174.82, 74], [176.42, 67], [176.87, 67], [177.35, 67], [177.77, 51], [179.6, 29], [181.87, 10], [183.93, 16], [186.88, 4], [189.37, 36], [191.34, 33], [192.62, 9], [196.36, 6], [199.45, 6], [202.2, 5], [204.1, 2], [206.1, 3], [208.26, 3], [210.57, 2], [211.93, 1], [213.88, 28], [215.08, 6], [217.38, 14], [223.76, 17], [224.89, 16], [226.34, 42], [227.2, 10], [227.9, 37], [228.47, 42], [229.08, 63], [229.95, 22], [231.06, 37], [232.26, 32], [233.2, 71], [233.78, 70], [235.28, 39], [236.58, 64], [237.74, 74], [242.33, 41], [245.76, 31], [248.13, 33], [249.71, 23], [251.25, 29], [252.37, 27], [253.47, 18], [254.97, 22], [256.69, 15], [258.08, 15]], "rf": "ok", "ef": "ok"}, {"id": "C", "frm": "Blain", "to": "Indre", "region": "Loire-Atlantique", "km": 80.4, "cum": 566.3, "dp": 505, "emin": 3, "emax": 82, "rng": "702 → 796", "diff": 2, "intro": "Portion d'abord roulante à la sortie du CP1, puis le Sillon de Bretagne s'anime : sentiers ludiques à travers collines et vallons boisés, jusqu'à la Loire.", "jal": ["Sillon de Bretagne", "Sentiers ludiques", "Bac de Loire — fin de trace (~km 80)"], "rav": "Correct.", "eau": "RAS.", "vig": ["BAC OBLIGATOIRE (sinon DISQ). Rotation /20 min, 5h30→22h20 sem. / 6h30→21h30 WE. Calcule ton coup !"], "cp": null, "prof": [[0.0, 14], [0.32, 13], [0.91, 13], [1.23, 13], [1.96, 12], [3.28, 16], [3.98, 30], [4.64, 30], [6.85, 33], [7.75, 32], [8.45, 26], [9.15, 25], [9.66, 26], [10.55, 31], [11.12, 28], [11.41, 25], [11.86, 24], [12.26, 26], [13.32, 24], [13.84, 29], [14.19, 29], [15.0, 30], [16.68, 28], [17.27, 25], [17.86, 28], [18.35, 33], [18.8, 43], [19.52, 47], [20.36, 49], [20.98, 53], [21.6, 37], [22.12, 45], [22.54, 50], [23.21, 56], [23.82, 59], [24.45, 54], [25.02, 59], [25.58, 64], [26.76, 59], [27.69, 40], [28.17, 32], [28.59, 39], [29.21, 55], [29.46, 61], [29.96, 60], [30.51, 59], [30.84, 61], [31.11, 59], [31.66, 56], [32.09, 64], [32.46, 54], [32.71, 49], [32.97, 47], [33.39, 62], [33.9, 61], [34.46, 40], [34.74, 27], [35.2, 32], [35.67, 59], [36.15, 67], [36.92, 74], [37.53, 80], [38.02, 73], [38.7, 63], [39.07, 50], [39.44, 32], [39.93, 32], [40.24, 47], [40.61, 57], [41.03, 64], [41.39, 73], [41.97, 73], [42.67, 76], [43.3, 76], [43.84, 61], [44.5, 34], [44.73, 34], [45.27, 25], [45.57, 14], [46.05, 31], [46.76, 48], [47.1, 53], [47.42, 63], [47.78, 72], [48.39, 67], [48.78, 56], [49.15, 57], [49.61, 68], [50.58, 71], [51.21, 72], [51.83, 79], [52.41, 81], [53.3, 77], [53.92, 71], [54.35, 64], [54.81, 54], [55.19, 56], [55.6, 66], [56.17, 62], [56.59, 36], [57.1, 34], [57.74, 47], [58.21, 44], [58.59, 42], [58.81, 51], [59.3, 67], [59.73, 41], [60.21, 24], [60.6, 22], [61.14, 33], [61.47, 47], [61.75, 65], [62.04, 69], [62.49, 67], [63.19, 73], [63.98, 68], [64.61, 70], [65.12, 68], [65.55, 72], [65.94, 73], [66.52, 74], [67.01, 75], [67.96, 64], [69.02, 61], [70.09, 46], [70.8, 29], [71.4, 31], [72.35, 32], [72.83, 12], [73.07, 6], [73.5, 6], [73.89, 9], [74.45, 23], [74.97, 18], [75.34, 9], [76.0, 8], [76.24, 6], [76.97, 6], [78.01, 5], [78.95, 5], [79.17, 6], [79.63, 10], [79.88, 8], [80.44, 3]], "rf": "ok", "ef": "ok"}, {"id": "D", "frm": "Indret", "to": "Thouarcé", "region": "Loire · Anjou", "km": 157.2, "cum": 723.5, "dp": 925, "emin": 0, "emax": 89, "rng": "1219 → 1280", "diff": 2, "intro": "Longue séquence de ~100 km au fil de la Loire, entre coteaux et vignes. Sections roulantes idéales pour récupérer, mais coups de cul à l'approche de Thouarcé (coteaux du Layon).", "jal": ["100 km le long de la Loire", "Coteaux & vignes", "Coups de cul du Layon", "Thouarcé (km 157)"], "rav": "Bon (zone habitée, vignobles).", "eau": "RAS.", "vig": ["Section idéale pour manger/récupérer avant le Poitou puis la montagne."], "cp": null, "prof": [[0.0, 0], [1.42, 9], [2.22, 32], [3.2, 30], [4.03, 4], [4.91, 4], [5.76, 4], [7.08, 4], [9.05, 4], [10.36, 5], [11.47, 5], [12.86, 4], [13.67, 3], [14.27, 5], [15.11, 8], [15.97, 5], [16.56, 5], [17.09, 4], [18.04, 8], [19.36, 8], [21.1, 8], [21.86, 7], [22.62, 7], [23.79, 5], [24.51, 20], [25.59, 22], [26.47, 9], [27.24, 11], [28.03, 6], [28.89, 19], [30.2, 34], [31.06, 23], [32.01, 26], [32.9, 37], [33.56, 40], [34.86, 44], [35.82, 23], [36.59, 26], [37.59, 10], [39.36, 11], [40.6, 11], [41.81, 26], [43.38, 37], [44.61, 24], [45.66, 25], [46.83, 49], [47.86, 50], [48.66, 58], [49.78, 47], [50.72, 32], [51.87, 33], [52.96, 11], [54.85, 5], [56.24, 5], [57.53, 6], [59.51, 25], [60.34, 70], [61.42, 74], [62.62, 76], [63.87, 42], [64.59, 39], [66.18, 14], [67.62, 61], [68.44, 25], [69.17, 48], [70.13, 69], [70.83, 54], [71.46, 27], [72.57, 11], [73.34, 12], [74.98, 9], [76.64, 17], [78.76, 9], [80.68, 9], [81.79, 12], [83.42, 10], [84.65, 7], [85.59, 8], [86.67, 9], [87.68, 9], [89.53, 9], [90.5, 9], [92.26, 9], [93.64, 10], [94.68, 10], [95.64, 12], [96.51, 20], [97.58, 15], [102.06, 8], [103.16, 15], [104.28, 22], [105.41, 45], [106.66, 77], [108.1, 77], [109.45, 74], [111.25, 67], [111.93, 72], [113.01, 80], [113.72, 73], [114.85, 38], [116.08, 46], [116.75, 26], [117.46, 23], [118.38, 18], [119.69, 23], [121.59, 54], [122.75, 19], [123.32, 18], [124.41, 20], [124.99, 12], [125.87, 15], [126.79, 21], [127.76, 17], [128.99, 59], [129.6, 51], [130.25, 69], [130.96, 66], [131.77, 27], [133.1, 24], [133.67, 27], [134.06, 25], [135.23, 64], [136.34, 89], [137.4, 63], [138.03, 36], [138.84, 23], [140.01, 57], [140.68, 78], [141.48, 74], [142.33, 83], [143.71, 27], [144.92, 28], [145.92, 37], [147.17, 86], [149.15, 79], [149.82, 83], [150.65, 72], [151.05, 60], [151.92, 34], [153.27, 33], [155.44, 39], [157.16, 30]], "rf": "ok", "ef": "ok"}, {"id": "E", "frm": "Thouarcé", "to": "Poitiers", "region": "Anjou · Poitou", "km": 160.9, "cum": 884.4, "dp": 758, "emin": 34, "emax": 158, "rng": "1138 → 1201", "diff": 2, "intro": "Transition plutôt plate mais loin d'être monotone. Paysages variés du Poitou : plaines, bois, vignes et champs. Tracé amélioré autour de Thouars.", "jal": ["Thouars (pilotage amélioré)", "Plaines du Poitou", "CP2 Poitiers (km 161)"], "rav": "Bon.", "eau": "RAS.", "vig": ["Dernière vraie zone « facile » — mange et dors correctement avant la bascule montagne."], "cp": "CP2 · La Cyclerie Café — km 889", "prof": [[0.0, 34], [1.01, 43], [2.7, 45], [3.55, 40], [4.32, 43], [5.39, 43], [6.31, 51], [7.66, 59], [9.36, 57], [10.32, 43], [11.0, 41], [12.41, 52], [13.57, 59], [15.15, 56], [17.26, 55], [18.07, 53], [18.88, 60], [20.4, 49], [21.34, 53], [22.84, 55], [23.88, 62], [24.95, 71], [26.02, 74], [26.85, 69], [27.87, 85], [28.78, 92], [29.71, 68], [31.59, 81], [33.04, 89], [34.79, 85], [36.91, 68], [37.81, 72], [39.71, 69], [40.1, 65], [41.29, 53], [42.39, 54], [43.89, 57], [46.11, 59], [47.51, 52], [48.81, 57], [49.75, 80], [51.08, 87], [52.5, 88], [53.36, 82], [54.66, 64], [55.47, 60], [56.05, 57], [56.87, 54], [57.71, 61], [58.68, 74], [59.49, 94], [60.43, 58], [61.48, 78], [62.34, 76], [63.11, 67], [63.92, 66], [64.67, 80], [66.17, 87], [67.42, 94], [68.55, 71], [70.03, 76], [71.85, 85], [73.59, 71], [75.29, 92], [76.58, 93], [77.79, 62], [79.45, 66], [80.42, 69], [81.52, 68], [82.81, 102], [83.9, 91], [84.44, 92], [84.76, 107], [85.05, 110], [85.86, 85], [86.93, 86], [87.71, 77], [88.07, 89], [88.53, 100], [89.23, 109], [89.71, 101], [90.35, 115], [91.16, 123], [91.94, 128], [92.7, 126], [93.77, 129], [94.76, 128], [96.11, 134], [97.34, 138], [98.42, 133], [100.45, 128], [101.87, 135], [103.46, 139], [104.29, 129], [105.25, 141], [106.01, 132], [106.58, 147], [107.39, 146], [108.16, 146], [108.8, 154], [109.67, 157], [110.4, 157], [111.55, 152], [112.22, 152], [114.03, 150], [115.62, 156], [116.58, 154], [117.82, 152], [118.47, 153], [119.31, 151], [120.19, 131], [120.83, 150], [121.93, 143], [122.99, 143], [124.84, 139], [127.21, 123], [127.9, 119], [128.73, 129], [129.8, 138], [130.91, 136], [131.67, 142], [133.22, 148], [137.25, 144], [138.95, 145], [140.68, 128], [141.85, 108], [142.65, 108], [143.34, 110], [144.24, 115], [145.05, 122], [145.66, 104], [146.61, 109], [147.48, 118], [148.55, 142], [150.89, 139], [152.48, 130], [153.3, 121], [153.94, 90], [154.7, 97], [155.78, 91], [156.57, 89], [157.34, 88], [158.31, 79], [159.17, 83], [159.73, 82], [160.68, 105], [160.92, 106]], "rf": "ok", "ef": "ok"}, {"id": "F", "frm": "Poitiers", "to": "Le Dorat", "region": "Poitou · Haut-Limousin", "km": 113.3, "cum": 997.7, "dp": 543, "emin": 70, "emax": 249, "rng": "882 → 935", "diff": 2, "intro": "Profil idéal pour recharger : beaucoup de roulant sur petites routes et chemins agricoles. Mais le calme précède la tempête — les premiers reliefs se profilent.", "jal": ["Chemins agricoles roulants", "Le Dorat (km 113) — dernier gros ravito avant la zone sauvage"], "rav": "Bon. FAIS LE PLEIN à Le Dorat : la trace G est sauvage.", "eau": "RAS. Charge l'eau ici.", "vig": ["Point de bascule stratégique : le « vrai » parcours commence après."], "cp": null, "prof": [[0.0, 105], [0.34, 102], [0.6, 83], [0.87, 76], [1.29, 84], [1.65, 92], [2.15, 95], [2.48, 100], [2.69, 87], [3.32, 82], [3.73, 78], [4.38, 79], [4.54, 82], [5.0, 88], [5.55, 88], [5.98, 87], [6.53, 96], [6.98, 101], [7.5, 91], [7.76, 99], [8.17, 113], [8.88, 120], [9.27, 116], [9.5, 115], [10.02, 126], [10.38, 128], [11.36, 119], [11.91, 122], [12.43, 131], [13.09, 134], [13.56, 132], [14.12, 126], [14.61, 123], [15.21, 117], [16.02, 124], [16.83, 129], [17.41, 131], [18.13, 123], [19.11, 112], [19.79, 114], [20.27, 117], [21.19, 109], [21.99, 115], [22.75, 119], [23.32, 121], [23.82, 120], [24.27, 119], [24.77, 118], [25.73, 117], [26.66, 121], [27.09, 119], [27.6, 122], [28.77, 123], [29.61, 117], [30.4, 122], [31.23, 125], [32.12, 122], [32.75, 123], [33.77, 130], [34.18, 128], [34.94, 119], [35.75, 120], [36.48, 108], [37.09, 80], [37.4, 71], [37.84, 74], [38.8, 89], [39.84, 107], [40.75, 122], [41.6, 123], [42.78, 123], [44.28, 122], [44.99, 124], [45.54, 122], [46.96, 131], [47.73, 146], [47.92, 145], [48.56, 143], [49.09, 142], [49.42, 146], [50.15, 151], [51.64, 152], [52.8, 152], [54.42, 152], [56.55, 149], [58.09, 136], [58.38, 117], [58.88, 128], [59.79, 140], [60.92, 111], [61.71, 106], [61.91, 90], [62.77, 91], [63.59, 104], [64.32, 98], [65.11, 97], [65.92, 97], [66.37, 98], [67.01, 107], [67.91, 116], [68.33, 113], [69.03, 113], [69.43, 97], [69.71, 96], [70.06, 104], [70.83, 114], [71.53, 114], [72.03, 120], [73.03, 119], [73.5, 117], [73.69, 120], [74.73, 119], [75.32, 116], [76.1, 127], [76.74, 125], [76.98, 127], [77.93, 136], [78.62, 145], [80.09, 159], [81.41, 157], [82.25, 150], [82.63, 150], [82.99, 157], [84.81, 163], [86.59, 168], [87.33, 172], [88.14, 174], [88.73, 179], [89.16, 185], [90.08, 186], [92.03, 185], [92.67, 193], [93.97, 202], [94.61, 205], [94.97, 206], [95.41, 210], [96.07, 210], [97.0, 210], [97.4, 213], [99.25, 230], [100.6, 238], [101.56, 240], [102.19, 228], [102.73, 235], [103.5, 240], [103.92, 243], [104.96, 247], [105.82, 243], [107.16, 224], [108.32, 206], [108.93, 204], [110.47, 190], [111.0, 206], [112.36, 227], [112.98, 231], [113.31, 227]], "rf": "ok", "ef": "ok"}, {"id": "G", "frm": "Le Dorat", "to": "Royère-de-Vassivière", "region": "Monts d'Ambazac · Haut-Limousin", "km": 123.7, "cum": 1121.4, "dp": 2221, "emin": 190, "emax": 801, "rng": "2538 → 3189", "diff": 4, "intro": "Fin des plaines : le terrain redevient hyper joueur, profil typé VTT, technique et ludique, au cœur de paysages superbes. Ça va faire mal aux jambes.", "jal": ["Monts d'Ambazac", "Sections VTT techniques", "Royère-de-Vassivière (km 124)"], "rav": "Zone sauvage, très peu de points. Réserve constituée à Le Dorat.", "eau": "Anticipe : peu de sources fiables.", "vig": ["Première grosse densité de D+ (~18 m/km). Gère l'effort."], "cp": null, "prof": [[0.0, 215], [0.69, 207], [1.68, 223], [2.82, 241], [4.85, 251], [6.49, 250], [7.37, 225], [8.77, 238], [9.52, 208], [10.08, 191], [11.16, 191], [11.86, 210], [12.62, 230], [13.58, 268], [14.51, 266], [15.23, 272], [16.73, 274], [18.17, 279], [19.17, 290], [20.35, 308], [22.15, 330], [23.64, 341], [24.65, 347], [25.41, 362], [26.57, 394], [27.82, 395], [28.48, 405], [29.21, 380], [30.17, 378], [30.84, 361], [31.57, 372], [32.32, 354], [33.09, 369], [33.71, 367], [34.43, 369], [34.78, 364], [35.32, 370], [35.89, 382], [36.49, 384], [37.47, 369], [38.29, 370], [38.66, 364], [39.15, 368], [39.71, 374], [40.13, 395], [40.51, 403], [41.03, 408], [41.54, 400], [42.16, 396], [42.8, 393], [43.41, 393], [44.05, 428], [44.84, 496], [45.62, 474], [46.11, 454], [46.77, 449], [47.64, 440], [48.46, 439], [49.49, 502], [50.37, 551], [51.37, 562], [52.01, 534], [52.79, 560], [53.58, 576], [54.44, 602], [55.1, 604], [55.62, 638], [56.46, 606], [57.25, 537], [57.85, 476], [58.62, 435], [59.46, 416], [60.63, 425], [62.08, 377], [63.37, 427], [64.67, 442], [65.8, 407], [66.56, 381], [67.82, 421], [68.81, 405], [69.4, 369], [69.92, 376], [70.54, 398], [71.11, 405], [71.63, 395], [72.6, 401], [73.67, 395], [74.32, 358], [74.79, 338], [75.35, 377], [76.14, 458], [76.62, 491], [77.23, 521], [78.2, 558], [79.23, 576], [80.1, 545], [81.2, 604], [82.48, 612], [83.27, 560], [84.06, 490], [85.41, 398], [86.08, 388], [86.45, 384], [87.81, 425], [88.82, 436], [89.97, 440], [91.02, 409], [91.4, 390], [92.13, 433], [93.04, 418], [93.84, 442], [94.72, 443], [95.84, 457], [97.02, 518], [98.05, 570], [98.88, 586], [99.5, 590], [100.91, 618], [102.48, 602], [103.45, 580], [104.16, 549], [104.93, 545], [105.71, 543], [106.29, 525], [106.92, 492], [107.57, 524], [108.2, 605], [109.18, 680], [110.27, 744], [111.42, 717], [111.89, 663], [112.94, 609], [113.8, 632], [114.7, 665], [115.5, 673], [116.25, 693], [117.02, 701], [117.7, 732], [118.93, 789], [119.7, 778], [120.59, 724], [121.11, 688], [121.56, 671], [122.53, 693], [123.48, 737], [123.74, 731]], "rf": "crit", "ef": "warn"}, {"id": "H", "frm": "Royère-de-Vassivière", "to": "Pontgibaud", "region": "Combrailles · Auvergne", "km": 117.4, "cum": 1238.8, "dp": 1512, "emin": 653, "emax": 920, "rng": "1833 → 2233", "diff": 4, "intro": "Le lac de Vassivière, puis la chaîne des Puys se dessine au loin. Traversée des Combrailles : bienvenue en Auvergne. C'est ici que s'élancera la Half To Peak.", "jal": ["Lac de Vassivière", "Combrailles", "La Courtine (ravito + nationale)", "Pontgibaud (km 117)"], "rav": "UNIQUEMENT Royère (départ) et La Courtine (milieu). Anticipe.", "eau": "Rare — remplis à La Courtine.", "vig": ["La Courtine : nationale à forte circulation (contournement camp militaire). Prudence."], "cp": null, "prof": [[0.0, 724], [0.48, 714], [1.28, 706], [2.03, 718], [2.71, 685], [3.22, 658], [3.8, 654], [4.31, 657], [4.76, 655], [5.23, 659], [5.68, 666], [6.04, 664], [6.41, 661], [6.82, 660], [7.38, 680], [7.86, 701], [8.34, 702], [8.92, 697], [9.78, 713], [11.41, 728], [13.19, 769], [13.96, 767], [14.23, 752], [14.89, 751], [15.63, 789], [16.21, 782], [16.75, 794], [17.92, 788], [18.57, 798], [19.21, 815], [20.03, 835], [21.17, 886], [22.66, 886], [23.51, 891], [24.62, 886], [25.94, 914], [26.87, 914], [27.39, 905], [28.29, 885], [29.08, 854], [29.4, 839], [30.04, 814], [30.8, 808], [31.26, 843], [31.97, 871], [33.0, 850], [34.17, 772], [35.0, 719], [35.54, 679], [36.52, 703], [37.42, 730], [38.21, 754], [38.93, 806], [40.03, 796], [41.17, 770], [43.26, 751], [44.99, 739], [46.24, 734], [46.88, 757], [47.72, 764], [48.38, 778], [48.96, 806], [49.29, 825], [49.83, 847], [50.4, 867], [51.01, 884], [51.72, 893], [52.57, 888], [53.44, 901], [54.21, 902], [54.94, 902], [55.64, 843], [56.5, 812], [57.16, 791], [57.66, 769], [58.16, 773], [58.92, 798], [59.73, 782], [60.66, 768], [61.27, 753], [62.09, 773], [62.99, 780], [64.13, 784], [65.09, 789], [66.12, 790], [66.95, 789], [67.84, 782], [69.09, 787], [70.1, 753], [71.48, 730], [72.1, 736], [72.74, 748], [73.86, 749], [75.88, 723], [76.87, 743], [77.34, 735], [78.12, 714], [79.53, 714], [80.05, 720], [80.75, 749], [81.42, 764], [82.3, 756], [83.07, 737], [84.17, 699], [84.81, 682], [86.02, 694], [87.11, 693], [87.94, 699], [89.53, 781], [91.13, 814], [91.68, 813], [92.19, 847], [92.9, 863], [93.81, 889], [94.79, 920], [95.99, 882], [96.72, 867], [97.46, 841], [98.07, 818], [99.16, 812], [99.67, 828], [100.24, 820], [100.86, 804], [101.2, 782], [101.73, 800], [102.6, 838], [103.33, 854], [104.55, 866], [105.37, 852], [105.95, 812], [106.61, 768], [107.08, 797], [107.69, 822], [108.74, 819], [109.31, 816], [110.29, 826], [111.25, 799], [112.01, 813], [112.86, 848], [113.64, 816], [114.6, 739], [115.2, 739], [116.27, 705], [116.61, 690], [117.39, 677]], "rf": "crit", "ef": "warn"}, {"id": "I", "frm": "Pontgibaud", "to": "Allanche", "region": "Chaîne des Puys · Cézallier", "km": 119.0, "cum": 1357.8, "dp": 2347, "emin": 677, "emax": 1448, "rng": "2748 → 3108", "diff": 4, "intro": "L'Auvergne dans toute sa splendeur : la chaîne des Puys enfin sous tes roues, puis descente vers le Cézallier — grands espaces et estives où les vaches battent les habitants.", "jal": ["Chaîne des Puys", "Lacs d'Auvergne", "Estives du Cézallier", "Allanche (km 119 · gîte « L'eau berge »)"], "rav": "Peu d'options ; Allanche = accueil chaleureux des baroudeurs.", "eau": "Prévoir de la marge sur les hauts plateaux.", "vig": ["BIVOUAC INTERDIT sur les 25 premiers km (Parc des volcans d'Auvergne)."], "cp": null, "prof": [[0.0, 677], [1.1, 725], [1.76, 742], [2.49, 768], [3.31, 770], [4.26, 776], [5.17, 783], [5.73, 803], [6.28, 820], [6.92, 824], [7.24, 833], [8.04, 867], [8.93, 905], [9.55, 925], [10.21, 957], [10.83, 966], [11.68, 950], [12.74, 944], [13.77, 953], [14.71, 974], [15.69, 1031], [16.31, 1072], [17.02, 1047], [17.67, 984], [18.29, 957], [19.65, 973], [20.2, 998], [21.18, 1048], [22.15, 1094], [23.33, 1055], [24.86, 1042], [25.92, 989], [26.36, 947], [26.77, 932], [27.27, 925], [27.98, 913], [28.56, 888], [29.11, 918], [29.88, 947], [30.8, 921], [31.63, 843], [32.18, 842], [32.77, 874], [33.24, 937], [34.31, 935], [35.43, 890], [36.08, 942], [36.66, 1007], [38.11, 1074], [38.72, 1128], [39.64, 1187], [40.4, 1212], [41.43, 1185], [41.92, 1159], [42.56, 1124], [43.15, 1146], [44.12, 1167], [45.13, 1114], [47.76, 1039], [49.34, 1050], [50.26, 1029], [52.42, 1128], [53.2, 1090], [53.87, 1048], [54.93, 1035], [55.64, 1050], [56.1, 1042], [56.93, 1044], [57.39, 984], [57.76, 936], [58.21, 885], [58.88, 876], [59.21, 884], [60.1, 897], [60.83, 896], [61.84, 884], [62.41, 861], [62.94, 866], [63.32, 896], [63.75, 933], [64.33, 936], [65.0, 967], [65.76, 1019], [66.36, 1041], [67.3, 1033], [67.89, 1035], [68.81, 1080], [69.9, 1084], [70.47, 1084], [71.01, 1047], [71.62, 1021], [72.15, 1038], [72.39, 1047], [73.03, 1085], [73.89, 1159], [75.02, 1212], [76.24, 1250], [77.67, 1276], [78.51, 1279], [79.02, 1256], [79.44, 1235], [80.01, 1215], [81.02, 1189], [81.97, 1190], [82.56, 1178], [83.05, 1178], [83.51, 1140], [84.06, 1110], [84.79, 1076], [85.07, 1054], [86.08, 1107], [86.86, 1166], [88.03, 1171], [89.24, 1182], [90.08, 1173], [90.78, 1211], [91.37, 1230], [92.33, 1187], [92.9, 1191], [93.69, 1202], [94.38, 1227], [95.23, 1215], [95.91, 1183], [96.59, 1161], [97.2, 1171], [97.64, 1182], [98.35, 1198], [99.01, 1230], [99.65, 1244], [100.33, 1234], [100.96, 1243], [101.68, 1269], [102.38, 1285], [102.84, 1300], [103.45, 1352], [104.34, 1423], [105.49, 1445], [106.01, 1412], [106.94, 1375], [108.54, 1336], [111.34, 1259], [112.15, 1217], [112.82, 1176], [113.63, 1139], [114.34, 1109], [114.95, 1070], [115.6, 1024], [116.61, 992], [117.63, 979], [118.27, 977], [118.93, 981], [118.96, 981]], "rf": "warn", "ef": "warn"}, {"id": "J", "frm": "Allanche", "to": "Sainte-Geneviève-sur-Argence", "region": "Plomb du Cantal · Gorges de la Truyère", "km": 95.8, "cum": 1453.6, "dp": 1975, "emin": 630, "emax": 1812, "rng": "2178 → 2677", "diff": 5, "intro": "L'Auvergne te laisse un souvenir coriace. Allanche → Murat → col de Prat de Bouc, puis le Plomb du Cantal à ~1810 m, avant les Gorges de la Truyère et l'entrée en Aveyron.", "jal": ["Murat (km 24 · ravito)", "Plomb du Cantal (km 45 · 1810 m · sommet aérien)", "Descente cassante Truyère (~km 46–60)", "CP3 Le Riols (km 96)"], "rav": "Murat = ressource. Ensuite espacé jusqu'au CP3.", "eau": "Remplis à Murat.", "vig": ["Sommet du Plomb (km 45) : sentier TRÈS aérien.", "2ᵉ partie de descente vers la Truyère (~km 50-60) : très cassante. À ÉVITER DE NUIT."], "cp": "CP3 · Bar Chez Audrey (Le Riols) — km 1458", "prof": [[0.0, 976], [0.67, 979], [1.19, 974], [2.19, 958], [2.89, 957], [3.37, 1000], [4.91, 1045], [5.66, 1073], [6.51, 1110], [7.08, 1147], [8.71, 1150], [9.6, 1150], [10.79, 1139], [11.7, 1182], [12.55, 1178], [14.04, 1160], [14.79, 1101], [15.38, 1089], [15.72, 1135], [16.11, 1169], [16.79, 1211], [17.3, 1229], [17.7, 1236], [18.42, 1223], [18.87, 1198], [19.37, 1157], [19.94, 1143], [20.71, 1141], [21.1, 1117], [21.56, 1086], [22.03, 1059], [22.48, 1011], [22.84, 983], [23.4, 969], [23.94, 935], [24.5, 906], [25.04, 895], [25.43, 886], [26.12, 891], [26.71, 894], [27.15, 931], [27.7, 994], [28.5, 1061], [29.68, 1103], [30.65, 1164], [31.29, 1220], [32.04, 1289], [32.72, 1329], [33.29, 1340], [34.06, 1372], [35.1, 1386], [36.19, 1374], [36.62, 1318], [37.52, 1291], [38.13, 1311], [38.85, 1327], [39.41, 1314], [39.8, 1341], [40.23, 1371], [40.8, 1398], [41.25, 1425], [41.57, 1462], [42.24, 1516], [42.54, 1541], [42.93, 1573], [43.22, 1608], [43.71, 1654], [44.53, 1753], [45.24, 1806], [45.6, 1812], [46.1, 1778], [46.53, 1736], [47.18, 1671], [47.58, 1682], [48.05, 1672], [48.68, 1623], [49.44, 1606], [49.97, 1577], [52.65, 1451], [54.15, 1342], [55.2, 1261], [56.38, 1183], [57.09, 1150], [57.67, 1133], [58.16, 1122], [58.93, 1081], [59.54, 1071], [60.09, 1058], [60.84, 1031], [61.6, 996], [62.53, 992], [63.41, 1004], [64.03, 996], [64.66, 975], [65.64, 954], [66.89, 942], [67.97, 927], [68.92, 915], [69.82, 899], [70.58, 890], [71.11, 884], [71.92, 896], [72.83, 864], [73.26, 833], [73.86, 828], [74.92, 864], [76.73, 845], [77.45, 871], [78.33, 839], [79.14, 777], [79.81, 721], [80.35, 665], [80.71, 630], [81.16, 660], [81.52, 684], [82.18, 685], [82.96, 667], [83.44, 664], [83.82, 689], [84.18, 699], [84.54, 673], [85.15, 687], [85.53, 716], [85.92, 711], [86.27, 727], [86.9, 736], [87.45, 744], [88.0, 733], [88.48, 769], [89.0, 803], [89.59, 831], [90.24, 861], [90.83, 832], [91.8, 823], [92.26, 829], [93.09, 822], [93.36, 796], [94.17, 765], [94.76, 788], [95.39, 803], [95.82, 806]], "rf": "warn", "ef": "warn"}, {"id": "K", "frm": "Sainte-Geneviève-sur-Argence", "to": "Villefort", "region": "Aubrac · Margeride · Cévennes", "km": 236.7, "cum": 1690.3, "dp": 3630, "emin": 593, "emax": 1580, "rng": "4149 → 5119", "diff": 5, "intro": "LE grand « must » de l'édition. Laguiole (le taureau), l'Aubrac à 360°, la Margeride sous les résineux, puis le col des Trois Sœurs ouvre l'enfer cévenol : plus raide, plus cassant.", "jal": ["Laguiole (km 46 · touche le taureau)", "Nasbinals (km 73)", "Aumont-Aubrac (km 97 · COUPURE conseillée — gare, supermarché)", "Châteauneuf-de-Randon (km 138)", "Col des Trois Sœurs → Cévennes", "Villefort (km 237)"], "rav": "Très espacé sur 237 km. Plein complet à Laguiole puis Aumont-Aubrac.", "eau": "Plateaux secs — anticipe.", "vig": ["Étape la plus longue ET très dure : coupe-la à Aumont-Aubrac (km 97).", "Cévennes après les Trois Sœurs : dénivelé et terrain nettement plus durs."], "cp": null, "prof": [[0.0, 799], [1.55, 826], [3.38, 854], [4.88, 808], [6.67, 793], [8.07, 719], [9.5, 698], [10.58, 694], [11.51, 673], [12.66, 643], [13.95, 722], [16.09, 704], [18.4, 697], [20.56, 712], [22.04, 674], [23.32, 719], [24.93, 749], [26.42, 731], [27.99, 770], [30.17, 769], [31.85, 826], [33.42, 827], [34.85, 883], [36.31, 833], [37.63, 821], [39.74, 889], [43.02, 957], [44.99, 957], [46.18, 1009], [47.6, 1010], [50.25, 1200], [52.3, 1236], [53.85, 1296], [55.26, 1307], [57.18, 1269], [59.61, 1212], [61.31, 1179], [62.61, 1116], [63.93, 1147], [65.49, 1187], [66.82, 1124], [67.68, 1084], [69.23, 1085], [70.48, 1125], [72.37, 1181], [73.32, 1195], [74.87, 1212], [76.56, 1154], [78.55, 1190], [80.5, 1229], [81.67, 1202], [83.17, 1194], [84.58, 1166], [85.84, 1158], [88.03, 1170], [89.86, 1143], [91.18, 1146], [93.72, 1090], [95.52, 1041], [96.43, 1045], [97.9, 1085], [100.0, 1060], [101.8, 1007], [102.9, 984], [104.09, 934], [105.59, 956], [106.75, 1011], [108.62, 1047], [109.89, 1100], [111.55, 1130], [113.05, 1136], [114.97, 1162], [116.11, 1246], [117.36, 1350], [119.04, 1356], [121.45, 1402], [124.05, 1473], [127.64, 1488], [129.33, 1468], [132.02, 1464], [134.71, 1399], [136.7, 1341], [138.49, 1277], [140.0, 1392], [141.98, 1428], [144.19, 1465], [145.75, 1501], [147.9, 1492], [149.34, 1430], [151.06, 1343], [152.03, 1328], [153.61, 1335], [155.49, 1359], [157.45, 1374], [159.45, 1309], [161.26, 1208], [162.19, 1232], [164.43, 1247], [168.04, 1214], [169.73, 1230], [172.08, 1262], [174.0, 1281], [176.01, 1203], [177.14, 1153], [178.52, 1032], [179.59, 987], [180.82, 954], [182.33, 926], [183.58, 956], [184.85, 1023], [186.11, 1077], [186.93, 1138], [188.28, 1163], [189.9, 1280], [191.62, 1359], [193.37, 1403], [195.56, 1474], [197.21, 1519], [198.68, 1551], [200.92, 1533], [202.47, 1540], [203.87, 1548], [205.29, 1534], [206.82, 1484], [208.57, 1510], [210.15, 1541], [212.3, 1567], [214.28, 1569], [216.91, 1557], [219.13, 1557], [220.62, 1481], [222.19, 1503], [223.68, 1392], [225.07, 1289], [226.74, 1162], [227.96, 1075], [228.97, 1017], [230.13, 922], [231.17, 845], [232.38, 775], [233.32, 734], [234.21, 706], [235.31, 634], [236.71, 593]], "rf": "crit", "ef": "warn"}, {"id": "L", "frm": "Villefort", "to": "Bédoin", "region": "Lozère · Ardèche · Vaucluse", "km": 198.7, "cum": 1889.0, "dp": 3173, "emin": 35, "emax": 1072, "rng": "3465 → 4689", "diff": 4, "intro": "La Lozère te réserve deux grosses ascensions, puis la descente technique des Vans, l'Ardèche rocailleuse, la traversée du Rhône (vignobles roulants) et le retour du relief aux Dentelles de Montmirail avant Bédoin.", "jal": ["2 cols après Villefort", "Descente des Vans (~km 55–60 · technique)", "Pont-St-Esprit (km 128 · gros ravito)", "Mornas (km 142 · départ délestage L-1)", "Gigondas (km 171 · départ délestage L-2)", "CP4 Bédoin (km 199)"], "rav": "Correct côté Rhône. Surprise corsée vers Mornas.", "eau": "OK en vallée du Rhône.", "vig": ["Descente des Vans (~km 55–60) : technique, vélo chargé + fatigue.", "VAUCLUSE : vérifie Sportity après 18h. Massif rouge → délestage OBLIGATOIRE (L-1 Mornas / L-2 Gigondas). DISQ + 750 € sinon."], "cp": "CP4 · Pista Cycling Café — km 1893", "prof": [[0.0, 594], [1.04, 649], [1.82, 700], [2.71, 758], [3.55, 825], [4.44, 846], [5.75, 793], [6.95, 777], [8.46, 741], [9.44, 643], [10.22, 588], [10.95, 539], [11.78, 460], [12.91, 357], [13.88, 350], [14.77, 380], [15.62, 417], [16.79, 490], [18.29, 593], [20.0, 743], [21.66, 871], [26.91, 1053], [28.49, 1032], [29.57, 1039], [30.43, 990], [31.81, 1028], [34.48, 1005], [35.56, 947], [36.5, 877], [37.51, 848], [38.54, 861], [39.96, 783], [41.09, 592], [41.97, 581], [43.26, 643], [45.19, 624], [46.87, 516], [47.68, 431], [48.99, 386], [50.08, 360], [51.11, 406], [51.82, 408], [52.94, 412], [54.2, 401], [56.41, 319], [57.53, 243], [58.64, 161], [60.18, 177], [61.17, 187], [62.32, 243], [63.59, 249], [64.52, 225], [65.51, 216], [66.68, 193], [68.19, 150], [69.56, 127], [71.05, 118], [72.64, 114], [74.49, 124], [76.37, 173], [77.92, 253], [79.03, 329], [79.74, 366], [80.74, 277], [82.07, 261], [83.31, 192], [84.31, 198], [85.43, 212], [86.62, 236], [87.47, 239], [90.23, 231], [92.58, 211], [94.94, 271], [96.84, 319], [98.06, 359], [99.26, 337], [100.18, 319], [101.01, 312], [102.72, 377], [104.85, 377], [106.67, 402], [108.24, 383], [109.64, 352], [110.81, 317], [111.74, 306], [113.0, 291], [114.27, 244], [115.3, 219], [116.02, 138], [116.51, 91], [117.93, 56], [119.31, 49], [120.72, 50], [121.63, 47], [123.12, 47], [127.55, 56], [129.28, 41], [131.68, 39], [134.01, 41], [138.46, 37], [140.91, 35], [141.87, 63], [142.5, 148], [143.33, 160], [145.11, 155], [146.35, 115], [147.32, 76], [148.39, 65], [150.37, 52], [152.9, 78], [154.64, 80], [156.97, 83], [159.32, 85], [162.93, 86], [166.19, 98], [168.19, 110], [171.0, 181], [172.47, 217], [173.82, 295], [174.75, 414], [175.8, 410], [177.14, 305], [178.35, 280], [179.25, 209], [180.23, 170], [181.16, 203], [182.1, 265], [183.08, 323], [183.63, 325], [184.82, 349], [185.7, 353], [186.99, 302], [188.1, 234], [189.41, 244], [190.1, 314], [191.65, 450], [192.75, 435], [193.46, 421], [194.52, 426], [195.29, 330], [196.24, 315], [198.0, 298], [198.68, 313]], "rf": "warn", "ef": "warn"}, {"id": "M", "frm": "Bédoin", "to": "Veynes", "region": "Mont Ventoux · Drôme provençale", "km": 184.6, "cum": 2073.6, "dp": 5112, "emin": 312, "emax": 1883, "rng": "5247 → 7193", "diff": 5, "intro": "Le géant de Provence. Ascension du Ventoux surtout par les pistes, final sur goudron dès le Chalet Reynard (sommet km 29). Puis la Drôme provençale, juge de paix : sauvage, très dénivelée, cols en série.", "jal": ["Sommet du Mont Ventoux (km 29 · 1885 m)", "Buis-les-Baronnies (km 72)", "Rémuzat (km 89 · COUPURE + ravito)", "Détour supermarché Verclause (~km 104)", "Veynes (km 185 · plein complet)"], "rav": "ZONE BLANCHE après Buis-les-Baronnies. Détour supermarché Rémuzat / Verclause (~km 104).", "eau": "Très rare — remplis au maximum.", "vig": ["Forte chaleur : monte le Ventoux tôt le matin ou en fin de journée, jamais en plein cagnard.", "Étape la plus dense en D+ (~28 m/km). Garde des forces."], "cp": null, "prof": [[0.0, 312], [2.78, 381], [5.14, 515], [6.83, 678], [8.17, 799], [9.49, 924], [10.65, 1044], [11.54, 1102], [12.59, 1188], [13.72, 1282], [15.05, 1431], [16.47, 1476], [17.77, 1521], [18.88, 1526], [20.06, 1518], [21.91, 1472], [23.05, 1467], [24.36, 1546], [25.92, 1657], [27.32, 1773], [28.73, 1882], [29.96, 1792], [31.18, 1684], [33.26, 1542], [34.45, 1435], [35.64, 1363], [37.04, 1275], [38.92, 1122], [40.82, 1017], [42.27, 988], [43.88, 982], [44.98, 990], [46.11, 943], [47.52, 827], [48.81, 746], [49.92, 674], [50.83, 602], [51.82, 553], [52.77, 492], [53.62, 473], [54.75, 548], [55.44, 567], [56.6, 597], [57.86, 630], [58.74, 601], [59.74, 546], [60.49, 517], [61.35, 481], [62.49, 447], [63.57, 503], [64.35, 544], [65.2, 586], [66.46, 626], [67.6, 630], [68.42, 574], [69.21, 576], [69.93, 606], [70.79, 518], [71.97, 422], [72.79, 376], [74.3, 390], [75.31, 417], [76.52, 468], [77.6, 534], [78.68, 590], [79.61, 648], [80.56, 698], [81.83, 778], [83.46, 842], [85.23, 753], [86.67, 746], [87.75, 790], [88.91, 888], [90.09, 786], [91.19, 740], [91.93, 786], [92.55, 844], [93.24, 927], [93.87, 1002], [94.99, 1141], [95.99, 1108], [97.06, 1017], [97.83, 962], [98.84, 872], [99.9, 800], [101.1, 715], [102.78, 621], [104.38, 552], [105.68, 539], [106.96, 536], [108.17, 546], [109.84, 561], [111.5, 585], [113.46, 653], [114.52, 691], [115.72, 705], [117.25, 796], [118.79, 881], [120.9, 1012], [121.97, 1068], [123.14, 998], [123.94, 954], [124.86, 885], [125.77, 811], [126.87, 731], [128.24, 683], [129.45, 716], [130.41, 658], [133.0, 682], [134.47, 705], [137.63, 795], [138.66, 875], [139.74, 985], [140.9, 1087], [142.26, 1218], [144.43, 1226], [145.9, 1246], [146.91, 1275], [148.39, 1405], [149.69, 1434], [150.96, 1349], [152.14, 1313], [153.48, 1354], [154.43, 1343], [155.71, 1206], [157.31, 1069], [158.73, 1009], [159.79, 919], [160.97, 853], [162.45, 803], [164.03, 757], [165.35, 784], [166.56, 767], [168.58, 707], [170.08, 732], [171.89, 802], [173.88, 812], [174.95, 768], [176.03, 757], [177.59, 842], [178.86, 951], [180.46, 968], [181.3, 921], [181.89, 838], [184.53, 819], [184.62, 821]], "rf": "crit", "ef": "crit"}, {"id": "N", "frm": "Veynes", "to": "Embrun", "region": "Gapençais · Serre-Ponçon", "km": 137.7, "cum": 2211.3, "dp": 3488, "emin": 778, "emax": 1689, "rng": "3621 → 4586", "diff": 5, "intro": "Bascule officielle dans le décor alpin. Hauteurs du Gapençais, lac de Serre-Ponçon en toile de fond. Gros morceau extrêmement physique — gère l'effort dès les premiers kilomètres.", "jal": ["Hauteurs du Gapençais", "La Roche-des-Arnauds (km 66 · Plan B ravito)", "Point haut ~1690 m (km 106)", "Lac de Serre-Ponçon", "Embrun (km 138)"], "rav": "PLEIN OBLIGATOIRE à Veynes. Ensuite autonomie quasi-totale.", "eau": "Secteur très isolé — réserves maximales.", "vig": ["Plan B ravito : descendre à La Roche-des-Arnauds (km 66, variante facultative). Évalue tes réserves avant de t'engager."], "cp": null, "prof": [[0.0, 823], [2.06, 862], [2.97, 904], [4.52, 855], [5.76, 809], [7.19, 812], [8.13, 874], [9.18, 910], [10.05, 979], [11.51, 1028], [12.41, 1058], [13.76, 1160], [14.22, 1202], [14.93, 1255], [15.76, 1286], [16.6, 1348], [17.21, 1316], [17.91, 1305], [18.71, 1277], [19.65, 1274], [20.39, 1209], [21.01, 1234], [22.4, 1187], [23.72, 1080], [24.61, 1034], [25.55, 1029], [26.28, 1000], [26.94, 937], [28.62, 927], [29.67, 947], [30.55, 1023], [31.31, 1080], [32.17, 1150], [33.53, 1248], [35.26, 1347], [36.36, 1405], [37.27, 1420], [38.31, 1343], [39.11, 1316], [40.34, 1401], [42.13, 1549], [43.45, 1652], [44.85, 1489], [45.98, 1405], [46.58, 1360], [47.23, 1311], [47.71, 1271], [48.57, 1211], [49.39, 1225], [50.17, 1284], [50.98, 1312], [51.62, 1294], [52.44, 1249], [53.3, 1192], [54.24, 1107], [54.94, 1028], [55.63, 972], [56.75, 940], [57.64, 981], [58.41, 1039], [59.61, 1112], [60.19, 1103], [61.51, 1155], [62.7, 1121], [63.23, 1076], [63.72, 1012], [64.34, 997], [64.96, 1038], [65.71, 1113], [67.06, 1175], [69.12, 1140], [70.18, 1145], [70.98, 1140], [72.09, 1146], [73.4, 1143], [74.5, 1141], [75.34, 1139], [76.4, 1152], [77.73, 1147], [78.69, 1143], [79.86, 1150], [81.14, 1163], [82.61, 1254], [84.18, 1273], [85.56, 1361], [87.27, 1410], [88.17, 1395], [89.04, 1404], [89.74, 1413], [90.44, 1446], [91.1, 1490], [91.84, 1536], [92.77, 1564], [93.82, 1549], [94.9, 1502], [95.41, 1544], [96.33, 1659], [97.2, 1633], [97.91, 1593], [98.9, 1584], [99.95, 1581], [101.09, 1596], [102.02, 1600], [102.8, 1634], [103.64, 1582], [104.6, 1573], [105.45, 1650], [106.25, 1679], [107.0, 1610], [107.9, 1571], [108.68, 1503], [109.35, 1437], [110.23, 1377], [111.14, 1326], [112.2, 1255], [112.79, 1278], [113.51, 1287], [114.27, 1290], [114.98, 1276], [115.96, 1274], [117.03, 1192], [117.99, 1133], [118.63, 1080], [119.87, 1011], [120.99, 934], [122.04, 859], [123.65, 804], [124.26, 846], [125.25, 919], [126.0, 971], [126.73, 1027], [127.6, 1097], [128.69, 1151], [129.97, 1165], [131.39, 1105], [132.08, 1048], [132.86, 980], [133.73, 909], [134.26, 868], [134.66, 833], [135.07, 791], [136.04, 792], [137.72, 778]], "rf": "crit", "ef": "crit"}, {"id": "O", "frm": "Embrun", "to": "Saint-Véran", "region": "Queyras · Col de Valbelle", "km": 86.4, "cum": 2297.7, "dp": 3301, "emin": 782, "emax": 2379, "rng": "3335 → 4025", "diff": 4, "intro": "Le grand final alpin. Col de Valbelle à 2380 m (km 32) au-dessus de Risoul, décor de haute montagne au sifflement des marmottes. Longues pistes roulantes, mais l'altitude te rappelle que l'arrivée se mérite.", "jal": ["Col de Valbelle (km 32 · 2380 m · point culminant)", "Descente vers Guillestre", "Guillestre (km 49) puis 6 km route du Guil / Izoard", "ARRIVÉE Saint-Véran (km 86) 🏁"], "rav": "Guillestre = dernière vraie ressource.", "eau": "OK en vallée.", "vig": ["Après Guillestre : 6 km de route du Guil / Izoard, circulation dense. Grande vigilance."], "cp": null, "prof": [[0.0, 782], [0.85, 789], [1.92, 814], [3.51, 827], [4.44, 809], [5.61, 809], [6.66, 864], [7.07, 913], [7.88, 976], [8.4, 1025], [9.19, 1104], [9.77, 1131], [10.26, 1143], [10.82, 1152], [11.21, 1138], [11.69, 1111], [12.26, 1104], [12.79, 1094], [13.26, 1109], [13.67, 1139], [14.06, 1173], [14.84, 1222], [15.67, 1270], [16.41, 1321], [16.95, 1386], [17.5, 1465], [18.2, 1514], [18.74, 1557], [19.35, 1603], [20.34, 1697], [20.97, 1750], [21.6, 1803], [22.19, 1827], [23.2, 1872], [23.93, 1894], [24.57, 1909], [25.13, 1922], [26.01, 1979], [26.54, 1989], [27.23, 2045], [27.67, 2091], [28.24, 2129], [28.73, 2176], [29.03, 2196], [29.47, 2237], [29.87, 2265], [30.34, 2280], [30.77, 2301], [31.15, 2340], [31.72, 2375], [32.24, 2373], [32.69, 2336], [33.28, 2273], [33.61, 2248], [33.97, 2213], [34.42, 2170], [34.89, 2132], [35.32, 2095], [35.71, 2061], [36.18, 2027], [36.78, 1961], [37.3, 1914], [37.69, 1882], [38.17, 1861], [38.65, 1833], [39.17, 1788], [39.85, 1734], [40.29, 1696], [40.64, 1656], [41.06, 1629], [41.48, 1598], [41.8, 1564], [42.25, 1528], [42.67, 1493], [43.19, 1454], [43.84, 1388], [44.35, 1331], [44.88, 1289], [45.54, 1226], [46.01, 1184], [46.62, 1139], [47.16, 1102], [47.8, 1047], [48.3, 979], [48.71, 974], [49.58, 1024], [50.35, 1097], [51.09, 1140], [51.67, 1171], [52.33, 1177], [53.26, 1135], [53.85, 1093], [54.27, 1072], [54.83, 1079], [55.55, 1094], [57.4, 1142], [58.29, 1172], [59.56, 1185], [60.48, 1210], [62.27, 1223], [62.85, 1273], [63.28, 1316], [63.65, 1355], [64.1, 1391], [64.46, 1424], [65.01, 1473], [65.68, 1507], [66.16, 1514], [66.54, 1503], [67.01, 1489], [67.39, 1489], [67.81, 1481], [68.43, 1455], [69.01, 1432], [69.33, 1426], [69.86, 1420], [70.5, 1471], [71.03, 1521], [71.52, 1558], [72.12, 1594], [72.52, 1624], [72.99, 1676], [73.26, 1707], [73.66, 1744], [74.15, 1790], [74.6, 1840], [75.11, 1875], [75.64, 1903], [76.4, 1872], [76.92, 1853], [77.29, 1793], [77.98, 1743], [78.67, 1687], [79.13, 1711], [79.72, 1737], [80.35, 1719], [81.13, 1740], [81.78, 1766], [82.3, 1774], [82.98, 1809], [83.51, 1858], [84.22, 1869], [84.81, 1922], [85.24, 1958], [85.88, 2018], [86.36, 2043]], "rf": "warn", "ef": "warn"}, {"id": "Z", "frm": "Saint-Véran", "to": "Pic de Château-Renard (aller)", "region": "Bonus · 3 000 m", "km": 11.6, "cum": 2297.7, "dp": 918, "emin": 2012, "emax": 2932, "rng": "917 → 1014", "diff": 3, "intro": "Bonus facultatif après l'arrivée : montée à l'observatoire sous le Pic de Château-Renard. Ton unique occasion de franchir la barre des 3 000 m. Aller-retour sur la même piste de montagne.", "jal": ["Départ après l'arrivée", "Observatoire (~2930 m relevé, 3000 m au pic)", "Retour Saint-Véran"], "rav": "Depuis Saint-Véran uniquement.", "eau": "Emporte le nécessaire.", "vig": ["À faire seulement s'il te reste du jus et par météo clémente."], "cp": null, "prof": [[0.0, 2042], [0.09, 2038], [0.2, 2034], [0.29, 2029], [0.43, 2023], [0.47, 2019], [0.53, 2014], [0.69, 2012], [0.83, 2014], [0.89, 2014], [0.96, 2015], [1.01, 2018], [1.1, 2024], [1.19, 2037], [1.32, 2048], [1.36, 2057], [1.47, 2062], [1.54, 2068], [1.63, 2081], [1.79, 2094], [1.9, 2105], [1.98, 2113], [2.02, 2117], [2.12, 2121], [2.21, 2125], [2.28, 2132], [2.4, 2138], [2.51, 2145], [2.6, 2153], [2.7, 2160], [2.86, 2169], [2.97, 2180], [3.09, 2190], [3.17, 2203], [3.4, 2212], [3.54, 2223], [3.68, 2233], [3.75, 2241], [3.87, 2247], [3.92, 2253], [3.98, 2259], [4.08, 2266], [4.18, 2274], [4.22, 2279], [4.26, 2282], [4.35, 2289], [4.42, 2293], [4.49, 2300], [4.59, 2306], [4.65, 2311], [4.69, 2315], [4.73, 2320], [4.82, 2329], [4.88, 2342], [5.0, 2356], [5.05, 2366], [5.14, 2371], [5.21, 2374], [5.25, 2377], [5.33, 2384], [5.38, 2392], [5.43, 2403], [5.5, 2412], [5.68, 2421], [5.76, 2428], [5.85, 2433], [5.92, 2439], [5.95, 2446], [6.02, 2451], [6.1, 2455], [6.18, 2461], [6.23, 2468], [6.32, 2475], [6.36, 2481], [6.44, 2485], [6.49, 2491], [6.59, 2498], [6.7, 2506], [6.76, 2511], [6.81, 2515], [6.9, 2518], [6.94, 2525], [7.06, 2532], [7.11, 2539], [7.18, 2545], [7.23, 2549], [7.29, 2553], [7.38, 2560], [7.48, 2568], [7.54, 2575], [7.58, 2583], [7.66, 2590], [7.7, 2597], [7.77, 2603], [7.8, 2606], [7.84, 2610], [7.87, 2614], [7.93, 2619], [8.04, 2626], [8.06, 2634], [8.14, 2640], [8.17, 2646], [8.24, 2651], [8.28, 2656], [8.36, 2664], [8.5, 2672], [8.57, 2680], [8.65, 2690], [8.79, 2696], [8.94, 2704], [8.95, 2714], [9.18, 2725], [9.23, 2736], [9.39, 2745], [9.42, 2751], [9.46, 2756], [9.5, 2762], [9.57, 2766], [9.6, 2773], [9.65, 2779], [9.8, 2786], [9.82, 2793], [9.9, 2801], [9.96, 2808], [10.03, 2816], [10.12, 2822], [10.19, 2829], [10.32, 2836], [10.35, 2842], [10.46, 2848], [10.53, 2852], [10.56, 2855], [10.61, 2860], [10.7, 2864], [10.73, 2869], [10.85, 2875], [10.89, 2880], [10.99, 2885], [11.04, 2890], [11.08, 2893], [11.16, 2895], [11.21, 2899], [11.24, 2902], [11.27, 2905], [11.3, 2911], [11.36, 2918], [11.43, 2924], [11.47, 2929], [11.52, 2931], [11.57, 2932]], "rf": "ok", "ef": "ok"}];
+const plan13 = [{"d": 1, "dow": "Sam", "date": "18/07", "tr": ["A"], "loc": "Ploemeur", "km": 227.8, "dp": 2221, "note": "Gros départ pendant que le terrain roule encore."}, {"d": 2, "dow": "Dim", "date": "19/07", "tr": ["B"], "loc": "Blain", "km": 258.1, "dp": 1503, "cp": "CP1", "note": "Traversée du Morbihan."}, {"d": 3, "dow": "Lun", "date": "20/07", "tr": ["C", "D"], "loc": "Thouarcé", "km": 237.6, "dp": 1430, "warn": "Bac", "note": "Section la plus roulante — banque des km. Bac de Loire."}, {"d": 4, "dow": "Mar", "date": "21/07", "tr": ["E", "F"], "loc": "Le Dorat", "km": 274.2, "dp": 1301, "cp": "CP2", "note": "Dernière grosse journée facile. Plein à Le Dorat."}, {"d": 5, "dow": "Mer", "date": "22/07", "tr": ["G", "H"], "loc": "Pontgibaud", "km": 241.1, "dp": 3733, "note": "Bascule montagne : Limousin + Combrailles. Journée charnière."}, {"d": 6, "dow": "Jeu", "date": "23/07", "tr": ["I", "J"], "loc": "Ste-Geneviève", "km": 214.8, "dp": 4322, "cp": "CP3", "note": "Puys, Cézallier, Plomb du Cantal. La plus dure en densité."}, {"d": 7, "dow": "Ven", "date": "24/07", "tr": ["K¹"], "loc": "Aumont-Aubrac", "km": 96.6, "dp": 1548, "note": "Laguiole (taureau) + Aubrac. Coupure km 97 : gare + supermarché."}, {"d": 8, "dow": "Sam", "date": "25/07", "tr": ["K²"], "loc": "Villefort", "km": 140.1, "dp": 2079, "note": "Margeride → col des Trois Sœurs → Cévennes cassantes."}, {"d": 9, "dow": "Dim", "date": "26/07", "tr": ["L"], "loc": "Bédoin", "km": 198.7, "dp": 3173, "cp": "CP4", "warn": "Vaucluse", "note": "Les Vans, Ardèche, Dentelles. Check Sportity !"}, {"d": 10, "dow": "Lun", "date": "27/07", "tr": ["M¹"], "loc": "Rémuzat", "km": 88.6, "dp": 2743, "note": "Mont Ventoux tôt le matin → Drôme. Coupure/ravito km 89."}, {"d": 11, "dow": "Mar", "date": "28/07", "tr": ["M²"], "loc": "Veynes", "km": 96.0, "dp": 2364, "note": "Drôme sauvage → Veynes. Détour Verclause km 104."}, {"d": 12, "dow": "Mer", "date": "29/07", "tr": ["N"], "loc": "Embrun", "km": 137.7, "dp": 3488, "note": "Bascule alpine, Serre-Ponçon. Autonomie."}, {"d": 13, "dow": "Jeu", "date": "30/07", "tr": ["O", "+Z"], "loc": "SAINT-VÉRAN 🏁", "km": 86.4, "dp": 3301, "note": "Col de Valbelle 2380 m → arrivée. Bonus 3000 m possible."}];
+const plan15 = [{"d": 1, "dow": "Sam", "date": "18/07", "tr": ["A"], "loc": "Ploemeur", "km": 227.8, "dp": 2221, "note": "Gros départ, terrain encore roulant."}, {"d": 2, "dow": "Dim", "date": "19/07", "tr": ["B"], "loc": "Blain", "km": 258.1, "dp": 1503, "cp": "CP1", "note": "Traversée du Morbihan."}, {"d": 3, "dow": "Lun", "date": "20/07", "tr": ["C", "D"], "loc": "Thouarcé", "km": 237.6, "dp": 1430, "warn": "Bac", "note": "Bac de Loire. Section roulante."}, {"d": 4, "dow": "Mar", "date": "21/07", "tr": ["E", "F"], "loc": "Le Dorat", "km": 274.2, "dp": 1301, "cp": "CP2", "note": "Grosse journée plate. Plein à Le Dorat."}, {"d": 5, "dow": "Mer", "date": "22/07", "tr": ["G"], "loc": "Royère", "km": 123.7, "dp": 2221, "note": "Monts d'Ambazac, VTT technique."}, {"d": 6, "dow": "Jeu", "date": "23/07", "tr": ["H"], "loc": "Pontgibaud", "km": 117.4, "dp": 1512, "note": "Combrailles. Ravito La Courtine."}, {"d": 7, "dow": "Ven", "date": "24/07", "tr": ["I"], "loc": "Allanche", "km": 119.0, "dp": 2347, "note": "Chaîne des Puys → Cézallier."}, {"d": 8, "dow": "Sam", "date": "25/07", "tr": ["J"], "loc": "Ste-Geneviève", "km": 95.8, "dp": 1975, "cp": "CP3", "note": "Plomb du Cantal + Truyère (de jour !)."}, {"d": 9, "dow": "Dim", "date": "26/07", "tr": ["K¹"], "loc": "Aumont-Aubrac", "km": 96.6, "dp": 1548, "note": "Laguiole + Aubrac. Coupure km 97 (gare, supermarché)."}, {"d": 10, "dow": "Lun", "date": "27/07", "tr": ["K²"], "loc": "Villefort", "km": 140.1, "dp": 2079, "note": "Margeride → Trois Sœurs → Cévennes."}, {"d": 11, "dow": "Mar", "date": "28/07", "tr": ["L"], "loc": "Bédoin", "km": 198.7, "dp": 3173, "cp": "CP4", "warn": "Vaucluse", "note": "Les Vans + Ardèche + Rhône + Dentelles. Check Sportity !"}, {"d": 12, "dow": "Mer", "date": "29/07", "tr": ["M¹"], "loc": "Rémuzat", "km": 88.6, "dp": 2743, "note": "Ventoux tôt le matin → Drôme. Coupure/ravito km 89."}, {"d": 13, "dow": "Jeu", "date": "30/07", "tr": ["M²"], "loc": "Veynes", "km": 96.0, "dp": 2364, "note": "Drôme sauvage → Veynes. Détour Verclause km 104."}, {"d": 14, "dow": "Ven", "date": "31/07", "tr": ["N"], "loc": "Embrun", "km": 137.7, "dp": 3488, "note": "Alpes, Serre-Ponçon, autonomie."}, {"d": 15, "dow": "Sam", "date": "01/08", "tr": ["O", "+Z"], "loc": "SAINT-VÉRAN 🏁", "km": 86.4, "dp": 3301, "note": "Col de Valbelle → arrivée. ~1 j de marge avant le Poti’chat."}];
+const dayOf13 = {"A": "J1", "B": "J2", "C": "J3", "D": "J3", "E": "J4", "F": "J4", "G": "J5", "H": "J5", "I": "J6", "J": "J6", "K": "J7–J8", "L": "J9", "M": "J10–J11", "N": "J12", "O": "J13", "Z": "J13"};
+const dayOf15 = {"A": "J1", "B": "J2", "C": "J3", "D": "J3", "E": "J4", "F": "J4", "G": "J5", "H": "J6", "I": "J7", "J": "J8", "K": "J9–J10", "L": "J11", "M": "J12–J13", "N": "J14", "O": "J15", "Z": "J15"};
+
+const seqOf = {"A": [["mont", 20, "Monts d'Arrée"], ["mont", 12, "Mtgnes Noires"], ["val", 42, "campagne finistérienne"], ["roul", 26, "littoral"]], "B": [["val", 45, "forêts & landes"], ["roul", 30, "après Redon"], ["val", 25, "relances Guémené"]], "C": [["roul", 35, "sortie de Blain"], ["val", 40, "Sillon de Bretagne"], ["plat", 25, "bord de Loire"]], "D": [["plat", 20, "après le bac"], ["roul", 55, "au fil de la Loire"], ["val", 25, "coteaux du Layon"]], "E": [["plat", 30, "transition Thouars"], ["roul", 45, "plaines & bois"], ["plat", 25, "approche Poitiers"]], "F": [["roul", 70, "petites routes & chemins"], ["val", 30, "premiers reliefs"]], "G": [["val", 20, "départ"], ["mont", 35, "Monts d'Ambazac"], ["tech", 30, "VTT technique"], ["mont", 15, "Haut-Limousin"]], "H": [["val", 25, "Lac de Vassivière"], ["mont", 30, "Combrailles"], ["tech", 20, "La Courtine"], ["val", 25, "vers les Puys"]], "I": [["mont", 35, "Chaîne des Puys"], ["val", 20, "lacs"], ["roul", 30, "estives du Cézallier"], ["val", 15, "Allanche"]], "J": [["mont", 30, "Murat → Prat de Bouc"], ["mont", 16, "Plomb du Cantal"], ["tech", 30, "descente cassante"], ["val", 24, "gorges Truyère"]], "K": [["roul", 20, "Aubrac (Laguiole)"], ["val", 34, "Margeride"], ["mont", 20, "col des Trois Sœurs"], ["tech", 26, "Cévennes cassantes"]], "L": [["mont", 22, "2 cols post-Villefort"], ["tech", 18, "descente Les Vans"], ["tech", 20, "Ardèche"], ["roul", 22, "vallée du Rhône"], ["mont", 18, "Dentelles/Madeleine"]], "M": [["mont", 30, "Ventoux"], ["tech", 15, "descente"], ["mont", 43, "cols Drôme sauvage"], ["roul", 12, "vers Veynes"]], "N": [["mont", 42, "Gapençais"], ["val", 23, "Serre-Ponçon"], ["mont", 25, "secteur isolé"], ["roul", 10, "Embrun"]], "O": [["mont", 45, "col de Valbelle"], ["roul", 20, "pistes d'altitude"], ["tech", 18, "route du Guil"], ["mont", 17, "Saint-Véran"]], "Z": [["mont", 50, "montée observatoire"], ["tech", 50, "retour"]]};
+function bandHTML(id){
+  const S=seqOf[id]; if(!S) return '';
+  const segs=S.map(s=>`<div class="seg ${s[0]}" style="flex:${s[1]}"><span>${s[2]}</span></div>`).join('');
+  return `<div class="terrain"><div class="tcap">Type de terrain (indicatif)</div><div class="band">${segs}</div></div>`;
+}
+const dotColor=(dp,km)=>{const d=dp/km; if(d<9)return '#5cb185'; if(d<16)return '#3f9aa2'; if(d<24)return '#d98a3a'; return '#c2452c';};
+
+function spark(tr){
+  const P=tr.prof, W=680,H=92,pad=6;
+  const kmMax=P[P.length-1][0], lo=tr.emin, hi=tr.emax, span=Math.max(1,hi-lo);
+  const X=k=>pad+(k/kmMax)*(W-2*pad), Y=e=>pad+(1-(e-lo)/span)*(H-2*pad);
+  let d="M"+X(P[0][0]).toFixed(1)+","+Y(P[0][1]).toFixed(1);
+  for(let i=1;i<P.length;i++) d+=" L"+X(P[i][0]).toFixed(1)+","+Y(P[i][1]).toFixed(1);
+  const area=d+" L"+X(kmMax).toFixed(1)+","+(H-pad)+" L"+X(0).toFixed(1)+","+(H-pad)+" Z";
+  let mi=0; for(let i=1;i<P.length;i++) if(P[i][1]>P[mi][1]) mi=i;
+  const gid="g_"+tr.id.replace(/[^A-Za-z0-9]/g,"");
+  return `<div class="spark">
+    <svg class="sparksvg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--peak)"/><stop offset="1" stop-color="var(--sea)"/></linearGradient></defs>
+      <path d="${area}" fill="url(#${gid})" opacity="0.16"/>
+      <path d="${d}" fill="none" stroke="var(--ink)" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+      <circle cx="${X(P[mi][0]).toFixed(1)}" cy="${Y(P[mi][1]).toFixed(1)}" r="3" fill="var(--peak)"/>
+    </svg>
+    <div class="cap"><span>alt <b>${tr.emin}–${tr.emax} m</b></span><span class="hi">▲ ${tr.emax} m @ ~${Math.round(P[mi][0])} km</span><span>${tr.km} km</span></div>
+  </div>`;
+}
+
+function renderPlan(plan){
+  const totKm=plan.reduce((a,b)=>a+b.km,0), totDp=plan.reduce((a,b)=>a+b.dp,0);
+  document.getElementById('rail').innerHTML=plan.map(x=>`
+    <div class="day">
+      <div class="tick"><div class="dnum">J${x.d}</div><div class="ddate">${x.dow} ${x.date}</div></div>
+      <div class="body">
+        <span class="dot" style="background:${dotColor(x.dp,x.km)}"></span>
+        <div class="drow">
+          <span class="dtr">${x.tr.join(' + ')}</span>
+          <span class="dloc">→ ${x.loc}</span>
+          ${x.cp?`<span class="chip cp">${x.cp}</span>`:''}
+          ${x.warn?`<span class="chip warn">${x.warn}</span>`:''}
+          <span class="dnums"><span class="kk">${x.km.toLocaleString('fr-FR')} km</span> · <span class="dd">${x.dp.toLocaleString('fr-FR')} m</span></span>
+        </div>
+        <div class="dnote">${x.note}</div>
+      </div>
+    </div>`).join('');
+  const finish=plan[plan.length-1], safe=(plan===plan15);
+  document.getElementById('planMeta').innerHTML=`<b>${plan.length} jours</b> · moyenne <b>${Math.round(totKm/plan.length)} km</b> et <b>${Math.round(totDp/plan.length).toLocaleString('fr-FR')} m D+</b> / jour · total <b>${Math.round(totKm).toLocaleString('fr-FR')} km</b> / <b>${Math.round(totDp).toLocaleString('fr-FR')} m D+</b> · arrivée <b>${finish.dow} ${finish.date}</b>. `+
+   (safe?`<span style="color:var(--warn)">Marge courte : ~1 jour avant le Poti'chat (2 août 20h). ⚠ Le CP4 Bédoin tombe un lundi (café fermé lun+mar) : tracker valide, mais pas d'accueil/ravito sur place.</span>`
+        :`<span style="color:var(--ok)">Marge confortable : ~3 jours avant le Poti'chat (2 août 20h).</span>`);
+}
+
+function renderMaster(){
+  const fg=s=>`<span class="flag ${s==='ok'?'ok':s==='warn'?'warn':'crit'}"></span>`;
+  document.getElementById('masterBody').innerHTML=traces.filter(t=>t.id!=='Z').map(t=>`
+    <tr>
+      <td class="id">${t.id}</td>
+      <td>${t.frm} → ${t.to}</td>
+      <td class="num">${t.km.toLocaleString('fr-FR')}</td>
+      <td class="num cum">${Math.round(t.cum).toLocaleString('fr-FR')}</td>
+      <td class="num">${t.dp.toLocaleString('fr-FR')}</td>
+      <td><span class="diffbar">${[1,2,3,4,5].map(i=>`<i class="${i<=t.diff?'on':''}"></i>`).join('')}</span></td>
+      <td>${fg(t.rf)}</td><td>${fg(t.ef)}</td>
+      <td class="mono" style="font-size:.72rem;color:var(--muted)">${dayOf13[t.id]} / ${dayOf15[t.id]}</td>
+    </tr>`).join('');
+}
+
+function renderFiches(){
+  document.getElementById('fichesBody').innerHTML=traces.map(t=>{
+    const jalons=t.jal.map(j=>`<li>${j}</li>`).join('');
+    const vig=t.vig.map(v=>`<li>${v}</li>`).join('');
+    const fl=s=>s==='ok'?'ok':s==='warn'?'warn':'crit';
+    return `
+    <div class="fiche">
+      <div class="fhead">
+        <div class="tile"><div class="lt">${t.id}</div><div class="lb">TRACE</div></div>
+        <div class="fmeta">
+          <div class="region">${t.region}</div>
+          <div class="fname">${t.frm} → ${t.to}</div>
+          <div class="fnums">
+            <div><span class="big kmx">${t.km.toLocaleString('fr-FR')}</span><span class="u">km</span></div>
+            <div><span class="big dpx">${t.dp.toLocaleString('fr-FR')}</span><span class="u">m D+ (lissé)</span></div>
+            <div><span class="big" style="font-size:.85rem;color:var(--muted)">${t.rng}</span><span class="u">off. IBP↔Strava</span></div>
+            <div><span class="big" style="font-size:.85rem;color:var(--ink-2)">${t.emin}–${t.emax}</span><span class="u">altitude (m)</span></div>
+            ${t.id!=='Z'?`<div><span class="big" style="font-size:.85rem;color:var(--ink-2)">${Math.round(t.cum).toLocaleString('fr-FR')}</span><span class="u">km cumulés</span></div>`:''}
+          </div>
+        </div>
+        <div class="fdays">
+          <div class="dtag">Plan 13 j · <b>${dayOf13[t.id]}</b></div>
+          <div class="dtag">Plan 15 j · <b>${dayOf15[t.id]}</b></div>
+          <div class="dtag">Difficulté · <b>${'▰'.repeat(t.diff)}${'▱'.repeat(5-t.diff)}</b></div>
+        </div>
+      </div>
+      ${spark(t)}
+      ${bandHTML(t.id)}
+      <div class="fbody">
+        <p class="fintro">${t.intro}</p>
+        ${t.cp?`<div style="margin-bottom:12px"><span class="cpbadge">🏁 ${t.cp}</span></div>`:''}
+        <div class="fgrid">
+          <div class="fblock"><h4>Jalons clés (km sur la trace)</h4><ul>${jalons}</ul></div>
+          <div class="fblock">
+            <h4>Ravitaillement & eau</h4>
+            <p class="rline"><span class="flag ${fl(t.rf)}"></span><b>Ravito —</b> ${t.rav}</p>
+            <p class="rline"><span class="flag ${fl(t.ef)}"></span><b>Eau —</b> ${t.eau}</p>
+          </div>
+          <div class="fblock full"><div class="vig"><h4>Vigilance</h4><ul>${vig}</ul></div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let current=13;
+function setPlan(n){current=n;
+  document.getElementById('t13').classList.toggle('on',n===13);
+  document.getElementById('t15').classList.toggle('on',n===15);
+  renderPlan(n===13?plan13:plan15);}
+function renderCpHits(){
+  const hits={1:['good','13 j & 15 j : dim 19/07 (soir). Tracker valide ; repas selon présence.'],
+    2:['good','13 j & 15 j : mar 21/07. Patron ouvre tard — OK.'],
+    3:['tight','13 j : jeu 23/07 (avant 20h). 15 j : sam 25/07 → fenêtre continue 7h-21h30 ✓ (idéal).'],
+    4:['tight','13 j : dim 26/07, ouvert 9h-18h ✓. ⚠ 15 j : lun 28/07 → café FERMÉ (lun+mar) ; tracker valide, pas d\'accueil.']};
+  document.querySelectorAll('.hit[data-cp]').forEach(el=>{const h=hits[el.getAttribute('data-cp')];el.classList.add(h[0]);el.textContent='▸ '+h[1];});
+}
+renderMaster();renderFiches();renderCpHits();setPlan(13);
+
+</script>
+</body>
+</html>
