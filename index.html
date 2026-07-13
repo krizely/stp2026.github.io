@@ -41,16 +41,18 @@ a{color:var(--sea)}
 
 /* ---------- top bar ---------- */
 .topbar{position:sticky;top:0;z-index:30;background:rgba(19,38,48,.96);color:#e9edee;backdrop-filter:blur(6px)}
-.topbar .wrap{display:flex;align-items:center;gap:16px;height:52px}
+.topbar .wrap{display:flex;align-items:center;gap:16px;height:52px;overflow:hidden}
 .topbar .brand{font-family:"Archivo";font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.8rem}
-.topbar nav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.topbar nav{margin-left:auto;display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;min-width:0}
+.topbar nav::-webkit-scrollbar{display:none}
+.topbar nav a{flex:0 0 auto;white-space:nowrap}
 .topbar nav a{color:#aebfc6;text-decoration:none;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;padding:6px 9px;border-radius:6px}
 .topbar nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
 /* ---------- barre de raccourcis vers les fiches ---------- */
 .quickbar{position:sticky;top:52px;z-index:29;background:rgba(233,237,238,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
 .quickbar .wrap{display:flex;align-items:center;gap:10px;padding-top:7px;padding-bottom:7px}
 .qlabel{font-family:"IBM Plex Mono";font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;flex:0 0 auto}
-.qchips{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding:2px 0;flex:1}
+.qchips{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding:2px 0;flex:1;position:relative;z-index:1;-webkit-overflow-scrolling:touch}
 .qchips::-webkit-scrollbar{display:none}
 .qchip{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;
   min-width:34px;height:36px;border-radius:8px;text-decoration:none;background:var(--card);
@@ -61,7 +63,14 @@ a{color:var(--sea)}
 .qchip.here{background:var(--ink);color:#fff}
 .qchip.here small{color:#8fb1bb}
 .qchip.z{border-style:dashed}
-@media(max-width:640px){.qlabel{display:none}.quickbar .wrap{padding-left:12px;padding-right:12px}}
+@media(max-width:760px){
+  .topbar .brand{display:none}
+  .topbar .wrap{gap:8px;padding-left:12px;padding-right:12px}
+  .topbar nav{margin-left:0;flex:1}
+  .topbar nav a{padding:6px 7px;font-size:.68rem}
+  .btn-print{flex:0 0 auto;padding:7px 9px;font-size:.68rem}
+}
+@media(max-width:640px){.qchip{min-width:38px;height:40px}.qlabel{display:none}.quickbar .wrap{padding-left:12px;padding-right:12px}}
 .btn-print{font-family:"IBM Plex Mono";font-size:.72rem;color:var(--ink);background:#e9edee;border:none;padding:7px 12px;border-radius:6px;cursor:pointer;letter-spacing:.04em}
 
 /* ---------- hero ---------- */
