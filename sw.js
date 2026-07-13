@@ -5,7 +5,7 @@
    ============================================================ */
 
 /*  ⚠️  INCRÉMENTE À CHAQUE PUBLICATION  ⚠️  */
-const VERSION = 'v3';
+const VERSION = 'v3.1';
 
 const CACHE_APP    = `stp2026-app-${VERSION}`;  // purgé à chaque version
 const CACHE_ASSETS = 'stp2026-assets';          // JAMAIS purgé (polices !)
