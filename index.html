@@ -46,6 +46,22 @@ a{color:var(--sea)}
 .topbar nav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
 .topbar nav a{color:#aebfc6;text-decoration:none;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;padding:6px 9px;border-radius:6px}
 .topbar nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+/* ---------- barre de raccourcis vers les fiches ---------- */
+.quickbar{position:sticky;top:52px;z-index:29;background:rgba(233,237,238,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.quickbar .wrap{display:flex;align-items:center;gap:10px;padding-top:7px;padding-bottom:7px}
+.qlabel{font-family:"IBM Plex Mono";font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;flex:0 0 auto}
+.qchips{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding:2px 0;flex:1}
+.qchips::-webkit-scrollbar{display:none}
+.qchip{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-width:34px;height:36px;border-radius:8px;text-decoration:none;background:var(--card);
+  border:1px solid var(--line);border-bottom:3px solid var(--qc,var(--line));color:var(--ink);
+  font-family:"Archivo";font-weight:800;font-size:.92rem;line-height:1;transition:transform .08s,box-shadow .12s}
+.qchip small{font-family:"IBM Plex Mono";font-weight:500;font-size:.5rem;color:var(--muted);margin-top:2px;letter-spacing:.02em}
+.qchip:hover{transform:translateY(-1px);box-shadow:0 2px 7px rgba(19,38,48,.16);border-color:var(--qc,var(--sea))}
+.qchip.here{background:var(--ink);color:#fff}
+.qchip.here small{color:#8fb1bb}
+.qchip.z{border-style:dashed}
+@media(max-width:640px){.qlabel{display:none}.quickbar .wrap{padding-left:12px;padding-right:12px}}
 .btn-print{font-family:"IBM Plex Mono";font-size:.72rem;color:var(--ink);background:#e9edee;border:none;padding:7px 12px;border-radius:6px;cursor:pointer;letter-spacing:.04em}
 
 /* ---------- hero ---------- */
@@ -64,7 +80,8 @@ a{color:var(--sea)}
 .stat .l{font-family:"IBM Plex Mono";font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#7fa0aa;margin-top:6px}
 
 /* ---------- sections ---------- */
-section{padding:44px 0;scroll-margin-top:60px}
+section{padding:44px 0;scroll-margin-top:112px}
+.fiche{scroll-margin-top:112px}
 .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;border-bottom:2px solid var(--ink);padding-bottom:10px}
 .sec-head .idx{font-family:"IBM Plex Mono";font-size:.8rem;color:var(--sea);font-weight:600}
 .sec-head h2{font-size:clamp(1.4rem,3.6vw,2rem);font-weight:800;margin:0;letter-spacing:-.01em}
@@ -188,7 +205,7 @@ footer b{color:#e9edee}
 @media print{
   :root{--paper:#fff}
   body{font-size:11.5px;background:#fff}
-  .topbar,.btn-print,.toggle,.bandkey{display:none!important}
+  .topbar,.quickbar,.btn-print,.toggle,.bandkey{display:none!important}
   .wrap{max-width:none;padding:0 8mm}
   section{padding:8mm 0;page-break-inside:auto}
   .hero{color:#000;background:#fff;border-bottom:2px solid #000}
@@ -215,15 +232,67 @@ footer b{color:#e9edee}
 .tcap{font-family:"IBM Plex Mono";font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
 .band{border-radius:5px;overflow:hidden;height:26px}
 </style>
-</head>
 <link rel="manifest" href="./manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+  #upd{position:fixed;left:50%;bottom:16px;transform:translateX(-50%) translateY(150%);
+    z-index:99;display:flex;align-items:center;gap:10px;
+    background:#132630;color:#e9edee;border:1px solid #2c4a57;border-radius:10px;
+    padding:9px 12px;box-shadow:0 6px 24px rgba(0,0,0,.28);
+    font-family:"Inter",system-ui,sans-serif;font-size:.82rem;
+    transition:transform .28s ease;max-width:calc(100vw - 32px)}
+  #upd.show{transform:translateX(-50%) translateY(0)}
+  #upd button{border:none;border-radius:7px;padding:6px 11px;cursor:pointer;
+    font-family:"IBM Plex Mono",monospace;font-size:.72rem;font-weight:600}
+  #upd .go{background:#e9edee;color:#132630}
+  #upd .no{background:transparent;color:#8fb1bb}
+  @media print{#upd{display:none!important}}
+</style>
 <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
-  }
+if ('serviceWorker' in navigator) {
+  let refreshing = false;
+
+  // Le nouveau SW a pris la main → on recharge une seule fois
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    location.reload();
+  });
+
+  window.addEventListener('load', async () => {
+    const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+
+    // Propose la bascule quand une nouvelle version est prête
+    const offer = (worker) => {
+      const bar = document.getElementById('upd');
+      if (!bar) return;
+      bar.classList.add('show');
+      bar.querySelector('.go').onclick = () => worker.postMessage('SKIP_WAITING');
+      bar.querySelector('.no').onclick = () => bar.classList.remove('show');
+    };
+
+    if (reg.waiting && navigator.serviceWorker.controller) offer(reg.waiting);
+
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing;
+      if (!nw) return;
+      nw.addEventListener('statechange', () => {
+        // "installed" + un SW déjà actif = c'est bien une MISE À JOUR
+        if (nw.state === 'installed' && navigator.serviceWorker.controller) offer(nw);
+      });
+    });
+
+    // Cherche une mise à jour au lancement...
+    reg.update();
+    // ...et à chaque retour sur l'app (relance depuis l'écran d'accueil)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') reg.update();
+    });
+  });
+}
 </script>
+</head>
 <body>
 
 <div class="topbar">
@@ -236,6 +305,13 @@ footer b{color:#e9edee}
       <a href="#fiches">Fiches</a>
     </nav>
     <button class="btn-print" onclick="window.print()">Imprimer / PDF</button>
+  </div>
+</div>
+
+<div class="quickbar">
+  <div class="wrap">
+    <span class="qlabel">Fiches ▸</span>
+    <div class="qchips" id="qchips"></div>
   </div>
 </div>
 
@@ -496,7 +572,7 @@ function renderFiches(){
     const vig=t.vig.map(v=>`<li>${v}</li>`).join('');
     const fl=s=>s==='ok'?'ok':s==='warn'?'warn':'crit';
     return `
-    <div class="fiche">
+    <div class="fiche" id="trace-${t.id}">
       <div class="fhead">
         <div class="tile"><div class="lt">${t.id}</div><div class="lb">TRACE</div></div>
         <div class="fmeta">
@@ -547,8 +623,33 @@ function renderCpHits(){
     4:['tight','13 j : dim 26/07, ouvert 9h-18h ✓. ⚠ 15 j : lun 28/07 → café FERMÉ (lun+mar) ; tracker valide, pas d\'accueil.']};
   document.querySelectorAll('.hit[data-cp]').forEach(el=>{const h=hits[el.getAttribute('data-cp')];el.classList.add(h[0]);el.textContent='▸ '+h[1];});
 }
-renderMaster();renderFiches();renderCpHits();setPlan(13);
+function renderQuick(){
+  const col=d=>['','#5cb185','#3f9aa2','#d98a3a','#c98a1c','#c2452c'][d]||'#d98a3a';
+  document.getElementById('qchips').innerHTML=traces.map(t=>{
+    const lbl = t.id==='Z' ? 'bonus' : Math.round(t.km)+'k';
+    return `<a class="qchip ${t.id==='Z'?'z':''}" href="#trace-${t.id}" style="--qc:${col(t.diff)}"
+      title="${t.frm} → ${t.to} · ${t.km} km · ${t.dp} m D+">${t.id}<small>${lbl}</small></a>`;
+  }).join('');
+  const chips=[...document.querySelectorAll('.qchip')];
+  const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const id=e.target.id.replace('trace-','');
+      chips.forEach(c=>c.classList.toggle('here', c.getAttribute('href')==='#trace-'+id));
+      const on=document.querySelector('.qchip.here');
+      if(on) on.scrollIntoView({block:'nearest',inline:'nearest'});
+    });
+  },{rootMargin:'-120px 0px -60% 0px'});
+  traces.forEach(t=>{const el=document.getElementById('trace-'+t.id); if(el) obs.observe(el);});
+}
+renderMaster();renderFiches();renderQuick();renderCpHits();setPlan(13);
 
 </script>
+
+<div id="upd" role="status">
+  <span>Nouvelle version du roadbook disponible.</span>
+  <button class="go">Mettre à jour</button>
+  <button class="no">Plus tard</button>
+</div>
 </body>
 </html>
