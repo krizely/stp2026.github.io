@@ -174,6 +174,21 @@ table.master .cum{color:var(--muted)}
 .fiche .fdays .dtag{font-family:"IBM Plex Mono";font-size:.66rem;white-space:nowrap;color:var(--ink-2)}
 .fiche .fdays .dtag b{color:var(--ink);font-weight:600}
 
+/* ---------- barre d'actions : lien vers la carte My Maps ---------- */
+.factions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:9px 18px;border-bottom:1px solid var(--line);background:#f2f6f6}
+.mapbtn{display:inline-flex;align-items:center;gap:7px;background:var(--sea);color:#fff;text-decoration:none;
+  font-family:"IBM Plex Mono",monospace;font-size:.72rem;font-weight:600;letter-spacing:.02em;
+  padding:7px 12px;border-radius:8px;border:1px solid transparent;transition:filter .15s,background .15s}
+.mapbtn:hover{filter:brightness(1.1)}
+.mapbtn .req{font-weight:400;opacity:.72;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase}
+.mapbtn.alt{background:#12303a}
+.mapbtn.todo{background:transparent;color:var(--muted);border:1px dashed #c4d0d2;cursor:default}
+.mapoff{display:none;font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--warn);align-items:center;gap:5px}
+.mapoff b{color:var(--ink)}
+body.is-offline .mapbtn:not(.todo){background:#dde5e6;color:var(--muted);border-color:#c4d0d2;pointer-events:none;filter:none}
+body.is-offline .mapoff{display:inline-flex}
+@media(max-width:640px){.factions{padding:9px 14px}.mapbtn{font-size:.68rem;padding:7px 10px}}
+
 /* terrain band */
 .band{display:flex;height:30px;margin:0}
 .band .seg{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -214,7 +229,7 @@ footer b{color:#e9edee}
 @media print{
   :root{--paper:#fff}
   body{font-size:11.5px;background:#fff}
-  .topbar,.quickbar,.btn-print,.toggle,.bandkey{display:none!important}
+  .topbar,.quickbar,.btn-print,.toggle,.bandkey,.factions{display:none!important}
   .wrap{max-width:none;padding:0 8mm}
   section{padding:8mm 0;page-break-inside:auto}
   .hero{color:#000;background:#fff;border-bottom:2px solid #000}
@@ -509,6 +524,75 @@ const dayOf13 = {"A": "J1", "B": "J2", "C": "J3", "D": "J3", "E": "J4", "F": "J4
 const dayOf15 = {"A": "J1", "B": "J2", "C": "J3", "D": "J3", "E": "J4", "F": "J4", "G": "J5", "H": "J6", "I": "J7", "J": "J8", "K": "J9–J10", "L": "J11", "M": "J12–J13", "N": "J14", "O": "J15", "Z": "J15"};
 
 const seqOf = {"A": [["mont", 20, "Monts d'Arrée"], ["mont", 12, "Mtgnes Noires"], ["val", 42, "campagne finistérienne"], ["roul", 26, "littoral"]], "B": [["val", 45, "forêts & landes"], ["roul", 30, "après Redon"], ["val", 25, "relances Guémené"]], "C": [["roul", 35, "sortie de Blain"], ["val", 40, "Sillon de Bretagne"], ["plat", 25, "bord de Loire"]], "D": [["plat", 20, "après le bac"], ["roul", 55, "au fil de la Loire"], ["val", 25, "coteaux du Layon"]], "E": [["plat", 30, "transition Thouars"], ["roul", 45, "plaines & bois"], ["plat", 25, "approche Poitiers"]], "F": [["roul", 70, "petites routes & chemins"], ["val", 30, "premiers reliefs"]], "G": [["val", 20, "départ"], ["mont", 35, "Monts d'Ambazac"], ["tech", 30, "VTT technique"], ["mont", 15, "Haut-Limousin"]], "H": [["val", 25, "Lac de Vassivière"], ["mont", 30, "Combrailles"], ["tech", 20, "La Courtine"], ["val", 25, "vers les Puys"]], "I": [["mont", 35, "Chaîne des Puys"], ["val", 20, "lacs"], ["roul", 30, "estives du Cézallier"], ["val", 15, "Allanche"]], "J": [["mont", 30, "Murat → Prat de Bouc"], ["mont", 16, "Plomb du Cantal"], ["tech", 30, "descente cassante"], ["val", 24, "gorges Truyère"]], "K": [["roul", 20, "Aubrac (Laguiole)"], ["val", 34, "Margeride"], ["mont", 20, "col des Trois Sœurs"], ["tech", 26, "Cévennes cassantes"]], "L": [["mont", 22, "2 cols post-Villefort"], ["tech", 18, "descente Les Vans"], ["tech", 20, "Ardèche"], ["roul", 22, "vallée du Rhône"], ["mont", 18, "Dentelles/Madeleine"]], "M": [["mont", 30, "Ventoux"], ["tech", 15, "descente"], ["mont", 43, "cols Drôme sauvage"], ["roul", 12, "vers Veynes"]], "N": [["mont", 42, "Gapençais"], ["val", 23, "Serre-Ponçon"], ["mont", 25, "secteur isolé"], ["roul", 10, "Embrun"]], "O": [["mont", 45, "col de Valbelle"], ["roul", 20, "pistes d'altitude"], ["tech", 18, "route du Guil"], ["mont", 17, "Saint-Véran"]], "Z": [["mont", 50, "montée observatoire"], ["tech", 50, "retour"]]};
+/* ═══════════════════════════════════════════════════════════════════════
+   CARTES GOOGLE MY MAPS  —  ★ C'EST ICI QUE TU COLLES TES LIENS ★
+   ───────────────────────────────────────────────────────────────────────
+   Dans My Maps : bouton Partager → passe l'accès à
+   « Tout utilisateur disposant du lien » → Copier le lien.
+   Format attendu :  https://www.google.com/maps/d/viewer?mid=XXXXXXXXXXXX
+   (bien le lien /viewer, PAS /edit)
+
+   Laisse "" tant que la carte n'existe pas → le bouton s'affiche grisé
+   « lien à renseigner » au lieu de pointer dans le vide.
+   ═══════════════════════════════════════════════════════════════════════ */
+const MYMAPS = {
+  ALL   : "",   // (facultatif) carte générale, toutes traces confondues
+  A     : "",
+  B     : "",
+  C     : "",
+  D     : "",
+  E     : "",
+  F     : "",
+  G     : "",
+  H     : "",
+  I     : "",
+  J     : "",
+  K     : "",
+  L     : "",
+  "L-1" : "",   // délestage Vaucluse depuis Mornas
+  "L-2" : "",   // délestage Vaucluse depuis Gigondas
+  M     : "",
+  N     : "",
+  O     : "",
+  Z     : ""    // bonus Pic de Château-Renard
+};
+
+// traces qui embarquent des cartes supplémentaires
+const extraMaps = { L: ["L-1", "L-2"] };
+
+function mapBtn(key, label, alt){
+  const u = (MYMAPS[key] || "").trim();
+  if(!u) return `<span class="mapbtn todo" title="Colle le lien My Maps dans la table MYMAPS (haut du script)">🗺 ${label} — lien à renseigner</span>`;
+  return `<a class="mapbtn${alt?' alt':''}" href="${u}" target="_blank" rel="noopener noreferrer">🗺 ${label}<span class="req">réseau</span></a>`;
+}
+
+function actionsHTML(t){
+  const btns = [ mapBtn(t.id, 'Carte My Maps · ' + t.id, false) ]
+    .concat((extraMaps[t.id] || []).map(k => mapBtn(k, 'Délestage ' + k, true)));
+  return `<div class="factions">${btns.join('')}
+    <span class="mapoff">⛔ Hors ligne — bascule sur <b>Guru&nbsp;/&nbsp;Organic Maps</b> (collection STP-${t.id})</span>
+  </div>`;
+}
+
+// grise les boutons dès que le téléphone perd le réseau
+function syncNet(){ document.body.classList.toggle('is-offline', navigator.onLine === false); }
+window.addEventListener('online', syncNet);
+window.addEventListener('offline', syncNet);
+
+// bouton "carte générale" dans l'en-tête de la section Fiches
+function renderAllMap(){
+  const u = (MYMAPS.ALL || "").trim();
+  if(!u) return;
+  const head = document.querySelector('#fiches .sec-head');
+  if(!head) return;
+  const a = document.createElement('a');
+  a.className = 'mapbtn';
+  a.href = u; a.target = '_blank'; a.rel = 'noopener noreferrer';
+  a.style.marginLeft = 'auto';
+  a.innerHTML = '🗺 Carte générale<span class="req">réseau</span>';
+  head.appendChild(a);
+}
+
 function bandHTML(id){
   const S=seqOf[id]; if(!S) return '';
   const segs=S.map(s=>`<div class="seg ${s[0]}" style="flex:${s[1]}"><span>${s[2]}</span></div>`).join('');
@@ -601,6 +685,7 @@ function renderFiches(){
           <div class="dtag">Difficulté · <b>${'▰'.repeat(t.diff)}${'▱'.repeat(5-t.diff)}</b></div>
         </div>
       </div>
+      ${actionsHTML(t)}
       ${spark(t)}
       ${bandHTML(t.id)}
       <div class="fbody">
@@ -651,7 +736,7 @@ function renderQuick(){
   },{rootMargin:'-120px 0px -60% 0px'});
   traces.forEach(t=>{const el=document.getElementById('trace-'+t.id); if(el) obs.observe(el);});
 }
-renderMaster();renderFiches();renderQuick();renderCpHits();setPlan(13);
+renderMaster();renderFiches();renderQuick();renderCpHits();setPlan(13);renderAllMap();syncNet();
 
 </script>
 
